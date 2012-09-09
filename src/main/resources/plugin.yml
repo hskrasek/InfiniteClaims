@@ -1,0 +1,52 @@
+name: InfiniteClaims
+main: com.hskrasek.InfiniteClaims.InfiniteClaims
+author: hskrasek
+authors: [LulzSek, Toffer]
+description: | 
+   InfiniteClaims is a plugin designed with the InfinitePlots world generator in mind. InfiniteClaims creates and manages player specific plots perfectly lined up with the phyiscal plots within the world. This is done using WorldEdit and WorldGuard API's, with the help of CommandHandler from the Multiverse team. 
+version: maven-version-number
+website: http://dev.bukkit.org/server-mods/infiniteclaims
+depend: [InfinitePlots, WorldGuard, WorldEdit]
+commands:
+   iclaims:
+      description: InfiniteClaims base command.
+      usage: /<command>
+   iclaimsplot:
+      description: Teleport to your plot, or someone elses.
+   icplot:
+      description: Teleport to you plot, or someone elses.
+   icm:
+      description: Manage your plot.
+   icmodify:
+      description: Manage your plot.
+   icma:
+      description: Manage your plot (Add a member).
+   icmr:
+      description: Manage your plot (Remove a member).
+   iclist:
+      description: List your plots.
+   icplotlist:
+      description: List you plots.
+   icnewplot:
+      description: Get an additional plot.
+   icmi:
+      description: Get information on your plots.
+   iclaimsreload:
+      description: Reload configuration.
+   icadmin:
+      description: Admin commands
+   icadminrem:
+      description: Admin remove command.
+   iclaimsr:
+      description: Plot reset command.
+   icai:
+      description: Admin info command.
+   icaam:
+      description: Admin add member command.
+   icarm:
+      description: Admin remove member command.
+permissions:
+   iclaims.auto:
+      description: Allows for automatic plot assignment.
+   iclaims.plot.max.*:
+      description: set plot max
