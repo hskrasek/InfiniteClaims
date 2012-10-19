@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import multiworld.MultiWorldPlugin;
+import multiworld.api.MultiWorldAPI;
+
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -43,6 +46,7 @@ import com.hskrasek.InfiniteClaims.listeners.InfiniteClaimsNewWorld;
 import com.hskrasek.InfiniteClaims.metrics.Metrics;
 import com.hskrasek.InfiniteClaims.metrics.Metrics.Graph;
 import com.hskrasek.InfiniteClaims.metrics.Metrics.Plotter;
+import com.hskrasek.InfiniteClaims.utils.IClaimsMessages;
 import com.hskrasek.InfiniteClaims.utils.InfiniteClaimsUtilities;
 import com.pneumaticraft.commandhandler.CommandHandler;
 import com.sk89q.wepif.PermissionsResolverManager;
@@ -70,10 +74,12 @@ public class InfiniteClaims extends JavaPlugin
 	public boolean						signsEnabled;
 	public String						pluginPrefix	= ChatColor.WHITE + "[" + ChatColor.RED + "InfiniteClaims" + ChatColor.WHITE + "] ";
 	public PermissionsResolverManager	permissionManager;
+	public MultiWorldAPI multiapi = null;
 
 	public void onLoad()
 	{
 		log = new InfiniteClaimsLogger("InfiniteClaims", getDataFolder() + File.separator + "debug.log");
+		IClaimsMessages messages = new IClaimsMessages(this);
 		log.setDefaultLogger(LOGGER);
 		icUtils = new InfiniteClaimsUtilities(this);
 		permissionsInterface = new InfiniteClaimsPerms(this);
@@ -98,7 +104,7 @@ public class InfiniteClaims extends JavaPlugin
 	public void onEnable()
 	{
 		pluginManager = this.getServer().getPluginManager();
-
+		multiapi = (MultiWorldAPI)((MultiWorldPlugin) pluginManager.getPlugin("MultiWorld")).getApi();
 		config = new InfiniteClaimsConfig(new File(this.getDataFolder().getAbsolutePath() + File.separator + "config.yml"), this);
 		pluginManager.registerEvents(new InfiniteClaimsAutoListener(this), this);
 		pluginManager.registerEvents(new InfiniteClaimsNewWorld(this), this);
@@ -110,19 +116,6 @@ public class InfiniteClaims extends JavaPlugin
 		plotHeight = config.getInt("plots.height");
 		maxPlots = config.getInt("plots.max-plots");
 		DEBUGGING = config.getBoolean("debugging");
-
-		// if(config.getString("version").equalsIgnoreCase("2.0.1"))
-		// {
-		// this.config.setString("version", "2.0.2");
-		// }
-		// else if(config.getString("version") == null ||
-		// !config.getString("version").equalsIgnoreCase("2.0.2"))
-		// {
-		// this.log.info("You were using an older version of InfiniteClaims, scheduling a legacy conversion when the server has a chance.");
-		// this.getServer().getScheduler().scheduleAsyncDelayedTask(this, new
-		// LegacyConversion(this), 40);
-		// this.config.setString("version", "2.0.1");
-		// }
 
 		this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Updater(this), 40, 432000);
 

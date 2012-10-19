@@ -137,16 +137,20 @@
     	<type>jar</type>
     </dependency>
     <dependency>
-    	<groupId>co.uk.jacekk.bukkit.infiniteplots</groupId>
-    	<artifactId>InfinitePlots</artifactId>
-    	<version>0.7</version>
-    	<type>jar</type>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>co.uk.jacekk.bukkit.infiniteplots</groupId>
+    	<artifactId>infiniteplots</artifactId>
+    	<version>0.8-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+    	<groupId>multiworld</groupId>
+    	<artifactId>multiworld</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <url>http://dev.bukkit.org/server-mods/InfiniteClaims</url>
