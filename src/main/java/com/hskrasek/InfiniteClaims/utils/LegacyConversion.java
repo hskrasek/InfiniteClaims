@@ -10,7 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 
-import uk.co.jacekk.bukkit.infiniteplots.InfinitePlotsGenerator;
+import uk.co.jacekk.bukkit.infiniteplots.PlotsGenerator;
 
 import com.hskrasek.InfiniteClaims.InfiniteClaims;
 import com.sk89q.worldedit.BlockVector;
@@ -43,7 +43,7 @@ public class LegacyConversion implements Runnable
 		{
 			plugin.log.log(Level.INFO, "Found a InfinitePlots world! Now converting plots for world: " + plotWorld.getName());
 
-			int plotSize = ((InfinitePlotsGenerator) plotWorld.getGenerator()).getPlotSize();
+			int plotSize = ((PlotsGenerator) plotWorld.getGenerator()).getPlotSize();
 
 			int y = plugin.plotHeight;
 

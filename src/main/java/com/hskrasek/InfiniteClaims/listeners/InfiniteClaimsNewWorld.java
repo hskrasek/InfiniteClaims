@@ -5,7 +5,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.generator.ChunkGenerator;
 
-import uk.co.jacekk.bukkit.infiniteplots.InfinitePlotsGenerator;
+import uk.co.jacekk.bukkit.infiniteplots.PlotsGenerator;
 
 import com.hskrasek.InfiniteClaims.InfiniteClaims;
 import com.hskrasek.InfiniteClaims.configuration.InfiniteClaimsPlotConfig;
@@ -31,7 +31,7 @@ public class InfiniteClaimsNewWorld implements Listener
 	public void onNewWorldCreation(WorldLoadEvent newWorld)
 	{
 		ChunkGenerator cg = newWorld.getWorld().getGenerator();
-		if (cg instanceof InfinitePlotsGenerator)
+		if (cg instanceof PlotsGenerator)
 		{
 			this.plugin.log.info("Creating a plots file for new InfinitePlots world " + newWorld.getWorld().getName());
 			InfiniteClaimsPlotConfig plotFile = new InfiniteClaimsPlotConfig(this.plugin, newWorld.getWorld());

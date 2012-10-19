@@ -10,7 +10,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.file.YamlConfigurationOptions;
 
-import uk.co.jacekk.bukkit.infiniteplots.InfinitePlotsGenerator;
+import uk.co.jacekk.bukkit.infiniteplots.PlotsGenerator;
 
 import com.hskrasek.InfiniteClaims.InfiniteClaims;
 import com.hskrasek.InfiniteClaims.exceptions.PlayerNotFoundException;
@@ -30,7 +30,7 @@ public class InfiniteClaimsPlotConfig
 		plot = new YamlConfiguration();
 		this.plugin = plugin;
 		this.plotWorld = plotWorld;
-		if (plotWorld.getGenerator() instanceof InfinitePlotsGenerator)
+		if (plotWorld.getGenerator() instanceof PlotsGenerator)
 		{
 			plotFile = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + plotWorld.getName() + File.separator + "plots.yml");
 		}

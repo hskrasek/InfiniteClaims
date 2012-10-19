@@ -21,7 +21,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
 
-import uk.co.jacekk.bukkit.infiniteplots.InfinitePlotsGenerator;
+import uk.co.jacekk.bukkit.infiniteplots.PlotsGenerator;
 
 import com.hskrasek.InfiniteClaims.InfiniteClaims;
 import com.hskrasek.InfiniteClaims.configuration.InfiniteClaimsPlotConfig;
@@ -440,7 +440,7 @@ public class InfiniteClaimsUtilities
 	public void addMember(String plotOwner, String playerToAdd, String plotName, World plotWorld)
 	{
 		ChunkGenerator cg = plotWorld.getGenerator();
-		if (cg instanceof InfinitePlotsGenerator == true)
+		if (cg instanceof PlotsGenerator == true)
 		{
 			RegionManager mgr = wgp.getGlobalRegionManager().get(plotWorld);
 			String regionId = plotOwner + plotName;
@@ -471,7 +471,7 @@ public class InfiniteClaimsUtilities
 	public void removeMember(String plotOwner, String playerToRemove, String plotName, World plotWorld)
 	{
 		ChunkGenerator cg = plotWorld.getGenerator();
-		if (cg instanceof InfinitePlotsGenerator == true)
+		if (cg instanceof PlotsGenerator == true)
 		{
 			RegionManager mgr = wgp.getGlobalRegionManager().get(plotWorld);
 			String regionId = plotOwner + plotName;
@@ -536,37 +536,18 @@ public class InfiniteClaimsUtilities
 			e.printStackTrace();
 		}
 
-		// try
-		// {
-		// regeneratePlot(player, plotName, worldName);
-		// }
-		// catch (InvalidWorldException e)
-		// {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-
-		sender.sendMessage(pluginPrefix + "Removed '" + ChatColor.RED + plotName + ChatColor.RESET + "' for player '" + ChatColor.RED + player + ChatColor.RESET + "'");
-		sender.sendMessage(pluginPrefix + "Plot was removed from the world: " + ChatColor.YELLOW + worldName);
-	}
-
-	private Region selectPlot(Player player, com.sk89q.worldguard.LocalPlayer localPlayer, ProtectedRegion region)
-	{
-		ProtectedCuboidRegion cuboid = (ProtectedCuboidRegion) region;
-		Vector pt1 = cuboid.getMinimumPoint();
-		Vector pt2 = cuboid.getMaximumPoint();
-		CuboidSelection selection = new CuboidSelection(player.getWorld(), pt1, pt2);
-
 		try
 		{
-			return selection.getRegionSelector().getRegion();
+			regeneratePlot(player, plotName, worldName);
 		}
-		catch (IncompleteRegionException e)
+		catch (InvalidWorldException e)
 		{
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return null;
+		sender.sendMessage(pluginPrefix + "Removed '" + ChatColor.RED + plotName + ChatColor.RESET + "' for player '" + ChatColor.RED + player + ChatColor.RESET + "'");
+		sender.sendMessage(pluginPrefix + "Plot was removed from the world: " + ChatColor.YELLOW + worldName);
 	}
 
 	public void teleportToPlot(Player thePlayer, String plotName, String worldName)
@@ -622,7 +603,7 @@ public class InfiniteClaimsUtilities
 		for (World world : plugin.getServer().getWorlds())
 		{
 			ChunkGenerator cg = world.getGenerator();
-			if (cg instanceof InfinitePlotsGenerator)
+			if (cg instanceof PlotsGenerator)
 			{
 				iclaimsWorlds.add(world);
 			}
@@ -651,7 +632,7 @@ public class InfiniteClaimsUtilities
 		for (World world : plugin.getServer().getWorlds())
 		{
 			ChunkGenerator cg = world.getGenerator();
-			if (cg instanceof InfinitePlotsGenerator && isInfiniteClaimsWorld(world))
+			if (cg instanceof PlotsGenerator && isInfiniteClaimsWorld(world))
 			{
 				final RegionManager mgr = wgp.getRegionManager(world);
 				final Map<String, ProtectedRegion> regions = mgr.getRegions();
