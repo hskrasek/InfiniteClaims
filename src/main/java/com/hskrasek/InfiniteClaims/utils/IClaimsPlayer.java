@@ -18,6 +18,7 @@ import org.bukkit.Material;
 import org.bukkit.Note;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
+import org.bukkit.Sound;
 import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -983,12 +984,7 @@ public class IClaimsPlayer extends LocalPlayer implements Player
 	{
 
 	}
-
-	public void setBedSpawnLocation(Location arg0)
-	{
-
-	}
-
+	
 	public void setCompassTarget(Location arg0)
 	{
 
@@ -1149,6 +1145,41 @@ public class IClaimsPlayer extends LocalPlayer implements Player
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public Inventory getEnderChest()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void playSound(Location arg0, Sound arg1, float arg2, float arg3)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void giveExpLevels(int arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setBedSpawnLocation(Location arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setBedSpawnLocation(Location arg0, boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

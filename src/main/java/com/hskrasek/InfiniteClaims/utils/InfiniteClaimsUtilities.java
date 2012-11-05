@@ -255,12 +255,15 @@ public class InfiniteClaimsUtilities
 					}
 				}
 
-				p.sendMessage(pluginPrefix + "Hi " + p.getName() + ". You don't seem to have a plot. Let me fix that for you!");
-				p.sendMessage(pluginPrefix + "I've found a plot for you! Naming it: " + ChatColor.YELLOW + "plot" + (playerRegionCount + 1));
-				p.sendMessage(pluginPrefix + "You will need this name to return to your plot");
-				p.sendMessage(pluginPrefix + "You can return to this plot with: ");
-				p.sendMessage(ChatColor.YELLOW + "/iclaims plot " + ChatColor.RED + "plot" + (playerRegionCount + 1) + ChatColor.WHITE + " while in the world " + w.getName());
-				p.sendMessage(ChatColor.YELLOW + "/iclaims plot " + ChatColor.RED + "plot" + (playerRegionCount + 1) + ChatColor.WHITE + " -w " + ChatColor.RED + w.getName() + ChatColor.RESET + " from any world.");
+//				p.sendMessage(pluginPrefix + "Hi " + p.getName() + ". You don't seem to have a plot. Let me fix that for you!");
+				p.sendMessage(pluginPrefix + plugin.messages.getMessage("new-plot-claimed-pt1", null));
+//				p.sendMessage(pluginPrefix + "I've found a plot for you! Naming it: " + ChatColor.YELLOW + "plot" + (playerRegionCount + 1));
+				p.sendMessage(pluginPrefix + plugin.messages.getMessage("new-plot-claimed-pt2", "plot"+(playerRegionCount + 1)));
+				p.sendMessage(pluginPrefix + plugin.messages.getMessage("new-plot-claimed-pt3", null));
+//				p.sendMessage(pluginPrefix + "You will need this name to return to your plot");
+//				p.sendMessage(pluginPrefix + "You can return to this plot with: ");
+//				p.sendMessage(ChatColor.YELLOW + "/iclaims plot " + ChatColor.RED + "plot" + (playerRegionCount + 1) + ChatColor.WHITE + " while in the world " + w.getName());
+//				p.sendMessage(ChatColor.YELLOW + "/iclaims plot " + ChatColor.RED + "plot" + (playerRegionCount + 1) + ChatColor.WHITE + " -w " + ChatColor.RED + w.getName() + ChatColor.RESET + " from any world.");
 
 				mgr.addRegion(playersPlot);
 

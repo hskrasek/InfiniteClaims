@@ -13,6 +13,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.hskrasek.InfiniteClaims.InfiniteClaims;
@@ -162,13 +163,18 @@ public class IClaimsMessages
 		
 	}
 	
-	public String getMessage(String messageKey, Object[] args)
+	public String getMessage(String messageKey, Object... args)
 	{
 		return getFormattedMessage(messageKey, args);
 	}
 	
-	protected String getFormattedMessage(String messageKey, Object[] args)
+	protected String getFormattedMessage(String messageKey, Object... args)
 	{
-		return null;
+		String message = getUserMessageYAML().getString("messages." + messageKey);
+		if(args != null)
+		{
+			return ChatColor.translateAlternateColorCodes('&', String.format(message, args));
+		}
+		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 }

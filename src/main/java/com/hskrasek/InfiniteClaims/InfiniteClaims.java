@@ -75,13 +75,13 @@ public class InfiniteClaims extends JavaPlugin
 	public boolean						signsEnabled;
 	public String						pluginPrefix	= ChatColor.WHITE + "[" + ChatColor.RED + "InfiniteClaims" + ChatColor.WHITE + "] ";
 	public PermissionsResolverManager	permissionManager;
+	public IClaimsMessages				messages;
 
 	public void onLoad()
 	{
 		log.init(this);
-		log.log(Level.INFO, "Test Logging");
 		log.setDebugLevel(1);
-		IClaimsMessages messages = new IClaimsMessages(this);
+		messages = new IClaimsMessages(this);
 		icUtils = new InfiniteClaimsUtilities(this);
 		permissionsInterface = new InfiniteClaimsPerms(this);
 		commandHandler = new CommandHandler(this, permissionsInterface);
