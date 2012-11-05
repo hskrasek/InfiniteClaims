@@ -255,15 +255,9 @@ public class InfiniteClaimsUtilities
 					}
 				}
 
-//				p.sendMessage(pluginPrefix + "Hi " + p.getName() + ". You don't seem to have a plot. Let me fix that for you!");
 				p.sendMessage(pluginPrefix + plugin.messages.getMessage("new-plot-claimed-pt1", null));
-//				p.sendMessage(pluginPrefix + "I've found a plot for you! Naming it: " + ChatColor.YELLOW + "plot" + (playerRegionCount + 1));
 				p.sendMessage(pluginPrefix + plugin.messages.getMessage("new-plot-claimed-pt2", "plot"+(playerRegionCount + 1)));
 				p.sendMessage(pluginPrefix + plugin.messages.getMessage("new-plot-claimed-pt3", null));
-//				p.sendMessage(pluginPrefix + "You will need this name to return to your plot");
-//				p.sendMessage(pluginPrefix + "You can return to this plot with: ");
-//				p.sendMessage(ChatColor.YELLOW + "/iclaims plot " + ChatColor.RED + "plot" + (playerRegionCount + 1) + ChatColor.WHITE + " while in the world " + w.getName());
-//				p.sendMessage(ChatColor.YELLOW + "/iclaims plot " + ChatColor.RED + "plot" + (playerRegionCount + 1) + ChatColor.WHITE + " -w " + ChatColor.RED + w.getName() + ChatColor.RESET + " from any world.");
 
 				mgr.addRegion(playersPlot);
 
@@ -276,7 +270,7 @@ public class InfiniteClaimsUtilities
 					e.printStackTrace();
 				}
 
-				p.sendMessage(pluginPrefix + "You can claim " + ChatColor.YELLOW + (mgr.getRegionCountOfPlayer(lp) == plugin.maxPlots ? 0 : (plugin.maxPlots - mgr.getRegionCountOfPlayer(lp))) + ChatColor.WHITE + " more plots in this world.");
+				p.sendMessage(pluginPrefix + plugin.messages.getMessage("plots-left", (mgr.getRegionCountOfPlayer(lp) == plugin.maxPlots ? 0 : (plugin.maxPlots - mgr.getRegionCountOfPlayer(lp)))));
 
 				p.teleport(new Location(w, bottomRight.getX() + (plotSize / 2), y + 2, bottomRight.getZ() + (plotSize), 180, 0));
 
@@ -337,11 +331,9 @@ public class InfiniteClaimsUtilities
 					}
 				}
 
-				p.sendMessage(pluginPrefix + ((playerRegionCount == 0) ? "Finding you a plot in " : "Finding you another plot in the world ") + w.getName());
-				p.sendMessage(pluginPrefix + "I've found a plot for you! Naming it: " + ChatColor.YELLOW + "plot" + (playerRegionCount + 1));
-				p.sendMessage(pluginPrefix + "You can return to this plot with: ");
-				p.sendMessage(ChatColor.YELLOW + "/iclaims plot " + ChatColor.RED + "plot" + (playerRegionCount + 1) + ChatColor.WHITE + " while in the world " + ChatColor.RED + w.getName());
-				p.sendMessage(ChatColor.YELLOW + "/iclaims plot " + ChatColor.RED + "plot" + (playerRegionCount + 1) + ChatColor.WHITE + " -w " + ChatColor.RED + w.getName() + ChatColor.RESET + " from any world.");
+				p.sendMessage(pluginPrefix + ((playerRegionCount == 0) ? plugin.messages.getMessage("new-plot-claimed-pt1", null) : plugin.messages.getMessage("new-plot-claimed-pt1-multi", null)));
+				p.sendMessage(pluginPrefix + plugin.messages.getMessage("new-plot-claimed-pt2", "plot"+(playerRegionCount + 1)));
+				p.sendMessage(pluginPrefix + plugin.messages.getMessage("new-plot-claimed-pt3", null));
 				p.teleport(new Location(w, bottomRight.getX() + (plotSize / 2), y + 2, bottomRight.getZ() + (plotSize), 180, 0));
 
 				savePlot(p, "plot" + (playerRegionCount + 1), new Location(w, bottomRight.getX() + (plotSize / 2), y + 1, bottomRight.getZ() + (plotSize)));
@@ -356,11 +348,11 @@ public class InfiniteClaimsUtilities
 					e.printStackTrace();
 				}
 
-				p.sendMessage(pluginPrefix + "You can claim " + ChatColor.YELLOW + (mgr.getRegionCountOfPlayer(lp) == plugin.maxPlots ? 0 : (plugin.maxPlots - mgr.getRegionCountOfPlayer(lp))) + ChatColor.WHITE + " more plots in this world.");
+				p.sendMessage(pluginPrefix + plugin.messages.getMessage("plots-left", (mgr.getRegionCountOfPlayer(lp) == plugin.maxPlots ? 0 : (plugin.maxPlots - mgr.getRegionCountOfPlayer(lp)))));
 			}
 			else if (playerRegionCount == plugin.maxPlots)
 			{
-				p.sendMessage(pluginPrefix + "You already have the maximum number of plots allowed on this server. Please use '" + ChatColor.YELLOW + "/iclaims plot" + ChatColor.WHITE + "' to return to an existing plot.");
+				p.sendMessage(pluginPrefix + plugin.messages.getMessage("max-plots-reached", null));
 			}
 		}
 	}

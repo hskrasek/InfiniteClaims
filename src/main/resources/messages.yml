@@ -1,15 +1,15 @@
 version: 2.1.0
 messages:
     new-plot-claimed-pt1: "You don't seem to have a plot... Finding one now."
-    new-plot-claimed-pt2: "Found a plot for you, it's called '%n'."
-    new-plot-claimed-pt3: "Use '/icplot' to learn how to return to this plot whenever."
+    new-plot-claimed-pt2: "Found a plot for you, it's called '&e%s'."
+    new-plot-claimed-pt3: "Use '/icplot' to learn how to return to this plot."
     new-plot-claimed-pt1-multi: "Finding you another plot..."
-    plots-left: "You can claim %d more plots in this world."
+    plots-left: "You can claim &e%d&f more plots in this world."
     max-plots-reached: "You already have the maximum number of plots allowed on this server."
-    not-plotworld-error: "&c%n is not a plot world, please try again in a plot world."
-    add-member: "Added '&e%n&f' to plot &e%n."
-    remove-member: "Removed '&e%n&f' from plot &e%n."
-    removed-plot: "Removed &c%n&f's plot: &c%n&f. Removed from '&c%n&f'."
-    plot-not-found: "&c%n &fis not a valid plot. Please try again."
+    not-plotworld-error: "&c%s is not a plot world, please try again in a plot world."
+    add-member: "Added '&e%s&f' to plot &e%s."
+    remove-member: "Removed '&e%n&f' from plot &e%s."
+    removed-plot: "Removed &c%n&f's plot: &c%s&f. Removed from '&c%s&f'."
+    plot-not-found: "&c%s &fis not a valid plot. Please try again."
     player-not-found: "Could not find a plot for that player. Please try again."
     
