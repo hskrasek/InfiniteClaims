@@ -1,3 +1,4 @@
+version: 2.1.0
 messages:
     new-plot-claimed-pt1: "You don't seem to have a plot... Finding one now."
     new-plot-claimed-pt2: "Found a plot for you, it's called '%n'."

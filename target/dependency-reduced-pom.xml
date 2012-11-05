@@ -76,6 +76,7 @@
                 <includes>
                   <include>com.pneumaticraft.commandhandler:CommandHandler</include>
                   <include>uk.co.jacekk.bukkit.infiniteplots:InfinitePlotsGenerator</include>
+                  <include>com.dumptruckman.minecraft:Logging</include>
                 </includes>
               </artifactSet>
             </configuration>
@@ -88,6 +89,10 @@
     <repository>
       <id>onarandombox</id>
       <url>http://repo.onarandombox.com/content/groups/public</url>
+    </repository>
+    <repository>
+      <id>OnARandomBox</id>
+      <url>http://repo.onarandombox.com/content/repositories/thirdparty</url>
     </repository>
     <repository>
       <id>Bukkit Official</id>
@@ -121,12 +126,6 @@
       <groupId>co.uk.jacekk.bukkit.infiniteplots</groupId>
       <artifactId>infiniteplots</artifactId>
       <version>0.8-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>multiworld</groupId>
-      <artifactId>multiworld</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
