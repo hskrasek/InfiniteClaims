@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
+import com.dumptruckman.minecraft.util.Logging;
 import com.hskrasek.InfiniteClaims.InfiniteClaims;
 import com.hskrasek.InfiniteClaims.InfiniteClaimsLogger;
 import com.pneumaticraft.commandhandler.Command;
@@ -13,7 +14,7 @@ import com.pneumaticraft.commandhandler.Command;
 public abstract class IClaimsCommand extends Command
 {
 	private InfiniteClaims			plugin;
-	private InfiniteClaimsLogger	log;
+	private Logging	log;
 
 	public IClaimsCommand(InfiniteClaims plugin)
 	{

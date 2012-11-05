@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import multiworld.MultiWorldPlugin;
-import multiworld.api.MultiWorldAPI;
+//import multiworld.MultiWorldPlugin;
+//import multiworld.api.MultiWorldAPI;
 
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -24,6 +24,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.dumptruckman.minecraft.util.Logging;
 import com.hskrasek.InfiniteClaims.commands.HelpCommand;
 import com.hskrasek.InfiniteClaims.commands.NewPlotCommand;
 import com.hskrasek.InfiniteClaims.commands.PlotAdminAddMemberCommand;
@@ -56,7 +57,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 public class InfiniteClaims extends JavaPlugin
 {
 	public static final Logger			LOGGER			= Logger.getLogger("Minecraft");
-	public InfiniteClaimsLogger			log;
+	public static Logging				log;
 	private CommandHandler				commandHandler;
 	private InfiniteClaimsPerms			permissionsInterface;
 	protected PluginManager				pluginManager;
@@ -74,13 +75,13 @@ public class InfiniteClaims extends JavaPlugin
 	public boolean						signsEnabled;
 	public String						pluginPrefix	= ChatColor.WHITE + "[" + ChatColor.RED + "InfiniteClaims" + ChatColor.WHITE + "] ";
 	public PermissionsResolverManager	permissionManager;
-	public MultiWorldAPI multiapi = null;
 
 	public void onLoad()
 	{
-		log = new InfiniteClaimsLogger("InfiniteClaims", getDataFolder() + File.separator + "debug.log");
+		log.init(this);
+		log.log(Level.INFO, "Test Logging");
+		log.setDebugLevel(1);
 		IClaimsMessages messages = new IClaimsMessages(this);
-		log.setDefaultLogger(LOGGER);
 		icUtils = new InfiniteClaimsUtilities(this);
 		permissionsInterface = new InfiniteClaimsPerms(this);
 		commandHandler = new CommandHandler(this, permissionsInterface);
@@ -93,7 +94,7 @@ public class InfiniteClaims extends JavaPlugin
 	public void onDisable()
 	{
 		log.log(Level.INFO, "Disabled!");
-		log.close();
+		log.shutdown();
 		log = null;
 		config = null;
 		icUtils = null;
@@ -104,7 +105,8 @@ public class InfiniteClaims extends JavaPlugin
 	public void onEnable()
 	{
 		pluginManager = this.getServer().getPluginManager();
-		multiapi = (MultiWorldAPI)((MultiWorldPlugin) pluginManager.getPlugin("MultiWorld")).getApi();
+		// multiapi = (MultiWorldAPI)((MultiWorldPlugin)
+		// pluginManager.getPlugin("MultiWorld")).getApi();
 		config = new InfiniteClaimsConfig(new File(this.getDataFolder().getAbsolutePath() + File.separator + "config.yml"), this);
 		pluginManager.registerEvents(new InfiniteClaimsAutoListener(this), this);
 		pluginManager.registerEvents(new InfiniteClaimsNewWorld(this), this);
@@ -221,7 +223,7 @@ public class InfiniteClaims extends JavaPlugin
 		return commandHandler;
 	}
 
-	public InfiniteClaimsLogger getLog()
+	public Logging getLog()
 	{
 		return log;
 	}
