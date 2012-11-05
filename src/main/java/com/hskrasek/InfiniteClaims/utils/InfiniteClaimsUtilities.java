@@ -201,27 +201,6 @@ public class InfiniteClaimsUtilities
 
 			RegionManager mgr = wgp.getGlobalRegionManager().get(w);
 
-			// Set<PermissionAttachmentInfo> permissions =
-			// p.getEffectivePermissions();
-			// Iterator<PermissionAttachmentInfo> permIterator =
-			// permissions.iterator();
-			// plugin.log.log(Level.INFO, "Starting Permissions Scan");
-			// while(permIterator.hasNext())
-			// {
-			// PermissionAttachmentInfo current = permIterator.next();
-			// String currentPermission = current.getPermission();
-			// plugin.log.log(Level.INFO, "Current Permissions: " +
-			// currentPermission);
-			// if(currentPermission.contains("iclaims.plot.max"))
-			// {
-			// plugin.log.log(Level.INFO, "Player: " + p.getName() +
-			// " has the permission node: " + currentPermission);
-			// int start = currentPermission.lastIndexOf(".");
-			// String maxNumber = currentPermission.substring(start);
-			// plugin.log.log(Level.INFO, "Max Plots: " + maxNumber);
-			// }
-			// }
-
 			if (playerRegionCount == 0 && isAuto)
 			{
 				if (plugin.signsEnabled)
