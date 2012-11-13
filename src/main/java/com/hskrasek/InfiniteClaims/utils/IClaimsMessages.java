@@ -20,44 +20,43 @@ import com.hskrasek.InfiniteClaims.InfiniteClaims;
 
 public class IClaimsMessages
 {
-	InfiniteClaims plugin;
-	YamlConfiguration messages = null;
-	
+	InfiniteClaims		plugin;
+	YamlConfiguration	messages	= null;
+
 	public IClaimsMessages(InfiniteClaims plugin)
 	{
 		this.plugin = plugin;
-		
-		if(!new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "messages.yml").exists())
+
+		if (!new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "messages.yml").exists())
 		{
 			copyMessagesToPluginDir();
 		}
-		else if(!currentMessageVersion().equals(userMessageVersion()))
+		else if (!currentMessageVersion().equals(userMessageVersion()))
 		{
-			
+
 		}
 		else
 		{
 			messages = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "messages.yml"));
 		}
-		
-//		YamlConfiguration currentMessages = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "messages.yml"));
-//		for(String key : currentMessages.getKeys(true))
-//		{
-//			plugin.log.log(Level.INFO, key);
-//		}
 	}
-	
+
+	public void reloadMessages()
+	{
+		messages = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "messages.yml"));
+	}
+
 	private void copyMessagesToPluginDir()
 	{
 		try
 		{
 			File jarLocation = new File(plugin.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getCanonicalFile();
-			
-			if(jarLocation.isFile())
+
+			if (jarLocation.isFile())
 			{
 				JarFile jarFile = new JarFile(jarLocation);
 				JarEntry jarEntry = jarFile.getJarEntry("messages.yml");
-				if(jarEntry != null && !jarEntry.isDirectory())
+				if (jarEntry != null && !jarEntry.isDirectory())
 				{
 					InputStream in = jarFile.getInputStream(jarEntry);
 					InputStreamReader inReader = new InputStreamReader(in, "UTF8");
@@ -65,7 +64,7 @@ public class IClaimsMessages
 					OutputStreamWriter outWriter = new OutputStreamWriter(out, "UTF-8");
 					char[] tempBytes = new char[512];
 					int readBytes = inReader.read(tempBytes, 0, 512);
-					while(readBytes > -1)
+					while (readBytes > -1)
 					{
 						outWriter.write(tempBytes, 0, readBytes);
 						readBytes = inReader.read(tempBytes, 0, 512);
@@ -85,25 +84,25 @@ public class IClaimsMessages
 			e.printStackTrace();
 		}
 	}
-	
+
 	private String currentMessageVersion()
 	{
 		return getJarMessageYAML().getString("version");
 	}
-	
+
 	private String userMessageVersion()
 	{
 		File userMessageFile = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "messages.yml");
-		
-		if(userMessageFile != null && !userMessageFile.isDirectory() && userMessageFile.exists())
+
+		if (userMessageFile != null && !userMessageFile.isDirectory() && userMessageFile.exists())
 		{
 			YamlConfiguration userMessages = YamlConfiguration.loadConfiguration(userMessageFile);
-			return (String)userMessages.get("vesion", "2.1.0");
+			return (String) userMessages.get("vesion", "2.1.0");
 		}
-		
+
 		return null;
 	}
-	
+
 	protected YamlConfiguration getJarMessageYAML()
 	{
 		File jarLocation = null;
@@ -120,8 +119,8 @@ public class IClaimsMessages
 		{
 			e.printStackTrace();
 		}
-		
-		if(jarLocation.isFile())
+
+		if (jarLocation.isFile())
 		{
 			JarFile jarFile = null;
 			try
@@ -134,7 +133,7 @@ public class IClaimsMessages
 				e.printStackTrace();
 			}
 			JarEntry jarEntry = jarFile.getJarEntry("messages.yml");
-			if(jarEntry != null && !jarEntry.isDirectory())
+			if (jarEntry != null && !jarEntry.isDirectory())
 			{
 				try
 				{
@@ -150,45 +149,45 @@ public class IClaimsMessages
 		}
 		return null;
 	}
-	
+
 	protected YamlConfiguration getUserMessageYAML()
 	{
 		return messages;
 	}
-	
+
 	private void updateUsersMessageFile()
 	{
 		Set<String> jarKeys = getJarMessageYAML().getKeys(true);
 		Set<String> userKeys = getUserMessageYAML().getKeys(true);
-		
-		for(String jarKey : jarKeys)
+
+		for (String jarKey : jarKeys)
 		{
-			if(!userKeys.contains(jarKey))
+			if (!userKeys.contains(jarKey))
 			{
 				getUserMessageYAML().set(jarKey, getJarMessageYAML().get(jarKey));
 			}
 		}
-		
+
 		try
 		{
 			getUserMessageYAML().save(new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "messages.yml"));
 		}
-		catch(IOException e)
+		catch (IOException e)
 		{
 			plugin.log.log(Level.SEVERE, "Was unable to update the messages.yml!");
 			e.printStackTrace();
 		}
 	}
-	
+
 	public String getMessage(String messageKey, Object... args)
 	{
 		return getFormattedMessage(messageKey, args);
 	}
-	
+
 	protected String getFormattedMessage(String messageKey, Object... args)
 	{
 		String message = getUserMessageYAML().getString("messages." + messageKey);
-		if(args != null)
+		if (args != null)
 		{
 			return ChatColor.translateAlternateColorCodes('&', String.format(message, args));
 		}

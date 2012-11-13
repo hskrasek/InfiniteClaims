@@ -13,9 +13,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//import multiworld.MultiWorldPlugin;
-//import multiworld.api.MultiWorldAPI;
-
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -36,6 +33,7 @@ import com.hskrasek.InfiniteClaims.commands.PlotListCommand;
 import com.hskrasek.InfiniteClaims.commands.PlotManagementAddMemberCommand;
 import com.hskrasek.InfiniteClaims.commands.PlotManagementCommand;
 import com.hskrasek.InfiniteClaims.commands.PlotManagementInfoCommand;
+import com.hskrasek.InfiniteClaims.commands.PlotManagementRemoveCommand;
 import com.hskrasek.InfiniteClaims.commands.PlotManagementRemoveMemberCommand;
 import com.hskrasek.InfiniteClaims.commands.PlotManagementResetCommand;
 import com.hskrasek.InfiniteClaims.commands.PlotTeleportCommand;
@@ -53,6 +51,8 @@ import com.pneumaticraft.commandhandler.CommandHandler;
 import com.sk89q.wepif.PermissionsResolverManager;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+//import multiworld.MultiWorldPlugin;
+//import multiworld.api.MultiWorldAPI;
 
 public class InfiniteClaims extends JavaPlugin
 {
@@ -139,6 +139,7 @@ public class InfiniteClaims extends JavaPlugin
 		this.commandHandler.registerCommand(new PlotManagementAddMemberCommand(this));
 		this.commandHandler.registerCommand(new PlotManagementRemoveMemberCommand(this));
 		this.commandHandler.registerCommand(new PlotManagementInfoCommand(this));
+		this.commandHandler.registerCommand(new PlotManagementRemoveCommand(this));
 		this.commandHandler.registerCommand(new NewPlotCommand(this));
 		this.commandHandler.registerCommand(new PlotListCommand(this));
 		this.commandHandler.registerCommand(new ReloadCommand(this));

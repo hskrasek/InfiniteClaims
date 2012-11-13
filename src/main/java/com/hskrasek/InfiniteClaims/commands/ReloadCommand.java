@@ -29,11 +29,12 @@ public class ReloadCommand extends IClaimsCommand
 
 	public void runCommand(CommandSender sender, List<String> args)
 	{
-		sender.sendMessage(plugin.getPluginPrefix() + "Reloading configuration...");
+		sender.sendMessage(plugin.getPluginPrefix() + "Reloading configuration and messages...");
 
 		long startTime = new Date().getTime();
 
 		this.plugin.reloadConfig();
+		this.plugin.messages.reloadMessages();
 
 		long endTime = new Date().getTime();
 

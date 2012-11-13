@@ -532,16 +532,67 @@ public class InfiniteClaimsUtilities
 		}
 	}
 
-	public void removePlot(CommandSender sender, String player, String plotName, String worldName)
+	public void removePlot(CommandSender sender, String playerName, String plotName, String worldName)
 	{
-		String fullPlotName = player + plotName;
+		String fullPlotName = playerName + plotName;
 
 		RegionManager mgr = wgp.getRegionManager(plugin.getServer().getWorld(worldName));
+		World claimsWorld = plugin.getServer().getWorld(worldName);
+		ProtectedRegion plotRegion = mgr.getRegion(fullPlotName);
+		
+		Location bottomRight = new Location(claimsWorld, plotRegion.getMinimumPoint().getX(), plotRegion.getMinimumPoint().getY(), plotRegion.getMinimumPoint().getZ()); 
+		Location bottomLeft = new Location(claimsWorld, bottomRight.getX() + (plotSize - 1), plotHeight, bottomRight.getZ());
+		Location topRight = new Location(claimsWorld, bottomRight.getX(), plotHeight, bottomRight.getZ() + (plotSize - 1));
+		Location topLeft = new Location(claimsWorld, bottomRight.getX() + (plotSize - 1), plotHeight, bottomRight.getZ() + (plotSize - 1));
+		
+		if (plugin.signsEnabled)
+		{
+			if (plugin.signPlacementMethod.equals("entrance"))
+			{
+				Location entranceLocation1 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) - 2, plotHeight + 3, bottomRight.getZ() + (plotSize));
+				Location entranceLocation2 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) + 2, plotHeight + 3, bottomRight.getZ() + (plotSize));
+				removeSign(entranceLocation1);
+				removeSign(entranceLocation2);
+			}
+			else if (plugin.signPlacementMethod.equals("corners"))
+			{
+				Location bottomRightTest = new Location(claimsWorld, bottomRight.getX() - 1, bottomRight.getY() + 3, bottomRight.getZ() - 1);
+				removeSign(bottomRightTest);
 
+				Location bottomLeftTest = new Location(claimsWorld, bottomLeft.getX() + 1, bottomLeft.getY() + 3, bottomLeft.getZ() - 1);
+				removeSign(bottomLeftTest);
+
+				Location topRightSign = new Location(claimsWorld, topRight.getX() - 1, topRight.getY() + 3, topRight.getZ() + 1);
+				removeSign(topRightSign);
+
+				Location topLeftSign = new Location(claimsWorld, topLeft.getX() + 1, topLeft.getY() + 3, topLeft.getZ() + 1);
+				removeSign(topLeftSign);
+			}
+			else if (plugin.signPlacementMethod.equals("both"))
+			{
+				Location entranceLocation1 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) - 2, plotHeight + 3, bottomRight.getZ() + (plotSize));
+				Location entranceLocation2 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) + 2, plotHeight + 3, bottomRight.getZ() + (plotSize));
+				removeSign(entranceLocation1);
+				removeSign(entranceLocation2);
+
+				Location bottomRightTest = new Location(claimsWorld, bottomRight.getX() - 1, bottomRight.getY() + 3, bottomRight.getZ() - 1);
+				removeSign(bottomRightTest);
+
+				Location bottomLeftTest = new Location(claimsWorld, bottomLeft.getX() + 1, bottomLeft.getY() + 3, bottomLeft.getZ() - 1);
+				removeSign(bottomLeftTest);
+
+				Location topRightSign = new Location(claimsWorld, topRight.getX() - 1, topRight.getY() + 3, topRight.getZ() + 1);
+				removeSign(topRightSign);
+
+				Location topLeftSign = new Location(claimsWorld, topLeft.getX() + 1, topLeft.getY() + 3, topLeft.getZ() + 1);
+				removeSign(topLeftSign);
+			}
+		}
+		
 		mgr.removeRegion(fullPlotName);
 
 		InfiniteClaimsPlotConfig plotFile = new InfiniteClaimsPlotConfig(this.plugin, plugin.getServer().getWorld(worldName));
-		plotFile.removePlot(player);
+		plotFile.removePlot(playerName);
 
 		try
 		{
@@ -554,14 +605,14 @@ public class InfiniteClaimsUtilities
 
 		try
 		{
-			regeneratePlot(player, plotName, worldName);
+			regeneratePlot(playerName, plotName, worldName);
 		}
 		catch (InvalidWorldException e)
 		{
 			e.printStackTrace();
 		}
 
-		sender.sendMessage(pluginPrefix + plugin.messages.getMessage("removed-plot", player, plotName, worldName));
+		sender.sendMessage(pluginPrefix + plugin.messages.getMessage("removed-plot", playerName, plotName, worldName));
 	}
 
 	public void teleportToPlot(Player thePlayer, String plotName, String worldName)
@@ -726,6 +777,12 @@ public class InfiniteClaimsUtilities
 		}
 
 		this.placeSign(plotOwnerPrefix, plotOwner, signBlock, facingDirection);
+	}
+	
+	private void removeSign(Location blockLocation)
+	{
+		Block signBlock = blockLocation.getBlock();
+		signBlock.setType(Material.AIR);
 	}
 
 	private void placeSign(String plotOwnerPrefix, String plotOwner, Block theBlock, BlockFace facingDirection)

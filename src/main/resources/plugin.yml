@@ -45,6 +45,8 @@ commands:
       description: Admin add member command.
    icarm:
       description: Admin remove member command.
+   icpr:
+      description: Plot remove command.
 permissions:
    iclaims.auto:
       description: Allows for automatic plot assignment.

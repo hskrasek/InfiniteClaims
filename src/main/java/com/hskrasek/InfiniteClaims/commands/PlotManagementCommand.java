@@ -23,7 +23,7 @@ public class PlotManagementCommand extends IClaimsCommand
 		this.plugin = plugin;
 		this.icUtils = plugin.getIcUtils();
 		this.setName("Plot Management");
-		this.setCommandUsage(ChatColor.YELLOW + "/iclaims" + ChatColor.RED + " {addmember,removemember,info,reset} ...");
+		this.setCommandUsage(ChatColor.YELLOW + "/iclaims" + ChatColor.RED + " {addmember,removemember,info,reset,remove} ...");
 		this.setArgRange(2, 3);
 		this.addKey("iclaimsmodify");
 		this.addKey("icmodify");
@@ -33,12 +33,14 @@ public class PlotManagementCommand extends IClaimsCommand
 		children.put("iclaims.plot.manage.removemember", true);
 		children.put("iclaims.plot.manage.info", true);
 		children.put("iclaims.plot.manage.reset", true);
+		children.put("iclaims.plot.manage.remove", true);
 		Permission mod = new Permission("iclaims.plot.manage", "Manage various parts of your plot, see below.", PermissionDefault.OP, children);
 		this.setPermission(mod);
 		this.addCommandExample(ChatColor.YELLOW + "/iclaims addmember " + ChatColor.RED + "?");
 		this.addCommandExample(ChatColor.YELLOW + "/iclaims removemember" + ChatColor.RED + "?");
 		this.addCommandExample(ChatColor.YELLOW + "/iclaims info " + ChatColor.RED + "?");
 		this.addCommandExample(ChatColor.YELLOW + "/iclaims reset " + ChatColor.RED + "?");
+		this.addCommandExample(ChatColor.YELLOW + "/iclaims remove " + ChatColor.RED + "?");
 	}
 
 	public void runCommand(CommandSender sender, List<String> args)
