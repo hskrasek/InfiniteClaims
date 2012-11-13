@@ -23,14 +23,14 @@ public class PlotAdminCommand extends IClaimsCommand
 		this.plugin = plugin;
 		this.icUtils = plugin.getIcUtils();
 		this.setName("Plot Administration");
-		this.setCommandUsage(String.format("%s/iclaims admin %s{remove,reset,addmember,removemember...} ...", ChatColor.YELLOW, ChatColor.RED));
+		this.setCommandUsage(String.format("%s/iclaims admin %s{remove,addmember,removemember...} ...", ChatColor.YELLOW, ChatColor.RED));
 		this.setArgRange(2, 3);
 		this.addKey("iclaims admin");
 		this.addKey("iclaimsadmin");
 		this.addKey("icadmin");
 		Map<String, Boolean> children = new HashMap<String, Boolean>();
 		children.put("iclaims.admin.remove", true);
-		children.put("iclaims.admin.reset", true);
+//		children.put("iclaims.admin.reset", true);
 		children.put("iclaims.admin.addmember", true);
 		children.put("iclaims.admin.removemember", true);
 		children.put("iclaims.admin.info", true);
