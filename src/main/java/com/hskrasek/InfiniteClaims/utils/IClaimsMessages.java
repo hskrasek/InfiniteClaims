@@ -161,6 +161,23 @@ public class IClaimsMessages
 		Set<String> jarKeys = getJarMessageYAML().getKeys(true);
 		Set<String> userKeys = getUserMessageYAML().getKeys(true);
 		
+		for(String jarKey : jarKeys)
+		{
+			if(!userKeys.contains(jarKey))
+			{
+				getUserMessageYAML().set(jarKey, getJarMessageYAML().get(jarKey));
+			}
+		}
+		
+		try
+		{
+			getUserMessageYAML().save(new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "messages.yml"));
+		}
+		catch(IOException e)
+		{
+			plugin.log.log(Level.SEVERE, "Was unable to update the messages.yml!");
+			e.printStackTrace();
+		}
 	}
 	
 	public String getMessage(String messageKey, Object... args)

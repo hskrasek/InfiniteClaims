@@ -44,21 +44,13 @@ public class PlotManagementResetCommand extends IClaimsCommand
 
 		if (plotName != null)
 		{
-			// if(worldName != null)
-			// {
-			//
-			// }
-			// else
-			// {
-			//
-			// }
 			try
 			{
 				icUtils.regeneratePlot(player.getName(), plotName, player.getWorld().getName());
 			}
 			catch (InvalidWorldException e)
 			{
-				sender.sendMessage("Please enter a plot world to reset your plot.");
+				sender.sendMessage(plugin.pluginPrefix + plugin.messages.getMessage("not-plotworld-error", player.getWorld().getName()));
 				e.printStackTrace();
 			}
 		}

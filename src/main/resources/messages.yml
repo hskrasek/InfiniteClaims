@@ -8,8 +8,8 @@ messages:
     max-plots-reached: "You already have the maximum number of plots allowed on this server."
     not-plotworld-error: "&c%s is not a plot world, please try again in a plot world."
     add-member: "Added '&e%s&f' to plot &e%s."
-    remove-member: "Removed '&e%n&f' from plot &e%s."
-    removed-plot: "Removed &c%n&f's plot: &c%s&f. Removed from '&c%s&f'."
+    remove-member: "Removed '&e%s&f' from plot &e%s."
+    removed-plot: "Removed &c%s&f's plot: &c%s&f. Removed from '&c%s&f'."
     plot-not-found: "&c%s &fis not a valid plot. Please try again."
     player-not-found: "Could not find a plot for that player. Please try again."
     
