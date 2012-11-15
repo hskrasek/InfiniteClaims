@@ -130,7 +130,7 @@
     </dependency>
   </dependencies>
   <properties>
-    <project.build.number>0</project.build.number>
+    <project.build.number>1</project.build.number>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>
