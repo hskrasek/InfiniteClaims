@@ -60,7 +60,7 @@ public class IClaimsMessages
 				{
 					InputStream in = jarFile.getInputStream(jarEntry);
 					InputStreamReader inReader = new InputStreamReader(in, "UTF8");
-					FileOutputStream out = new FileOutputStream(plugin.getDataFolder().getAbsolutePath() + File.separator + "messages.yml");
+					FileOutputStream out = new FileOutputStream(new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "messages.yml"));
 					OutputStreamWriter outWriter = new OutputStreamWriter(out, "UTF-8");
 					char[] tempBytes = new char[512];
 					int readBytes = inReader.read(tempBytes, 0, 512);
