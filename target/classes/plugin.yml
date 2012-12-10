@@ -4,7 +4,7 @@ author: hskrasek
 authors: [LulzSek, Toffer]
 description: | 
    InfiniteClaims is a plugin designed with the InfinitePlots world generator in mind. InfiniteClaims creates and manages player specific plots perfectly lined up with the phyiscal plots within the world. This is done using WorldEdit and WorldGuard API's, with the help of CommandHandler from the Multiverse team. 
-version: 2.1.1
+version: 2.1.2-SNAPSHOT
 website: http://dev.bukkit.org/server-mods/infiniteclaims
 depend: [InfinitePlots, WorldGuard, WorldEdit]
 commands:
