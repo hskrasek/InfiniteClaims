@@ -45,7 +45,6 @@ public class PlotManagementCommand extends IClaimsCommand
 
 	public void runCommand(CommandSender sender, List<String> args)
 	{
-		// This command does nothing but provide reference to the separate plot
-		// management commands
+		
 	}
 }

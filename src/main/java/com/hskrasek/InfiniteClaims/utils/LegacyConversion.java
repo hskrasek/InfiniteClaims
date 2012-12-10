@@ -20,6 +20,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
+@Deprecated
 public class LegacyConversion implements Runnable
 {
 	private InfiniteClaims			plugin;

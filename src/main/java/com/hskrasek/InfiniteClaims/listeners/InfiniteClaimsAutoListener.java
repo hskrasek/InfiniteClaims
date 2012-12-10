@@ -1,7 +1,5 @@
 package com.hskrasek.InfiniteClaims.listeners;
 
-import java.util.logging.Level;
-
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,27 +27,10 @@ public class InfiniteClaimsAutoListener implements Listener
 		World w = p.getWorld();
 		ChunkGenerator cg = w.getGenerator();
 
-		plugin.log.log(Level.INFO, "Player '" + p.getName() + "' changed to world: " + w.getName() + " from: " + changedWorld.getFrom().getName());
-		if (!(cg instanceof PlotsGenerator) && !plugin.getIcUtils().isInfiniteClaimsWorld(w))
-		{
-			plugin.log.log(Level.WARNING, "The world '" + w.getName() + "' is NOT an InfinitePlots world!");
-		}
-		else
-		{
-			plugin.log.log(Level.FINE, "The world '" + w.getName() + "' is a InfinitePlots world.");
-		}
-
 		if (cg instanceof PlotsGenerator && plugin.getPermissions().hasPermission(p, "iclaims.plot.auto", false))
 		{
 			int plotSize = ((PlotsGenerator) cg).getPlotSize();
-
-			plugin.log.log(Level.FINE, "Automatically finding '" + p.getName() + "' a plot in '" + w.getName() + "'.");
-
 			plugin.icUtils.plotAssigner(w, p, plugin.plotHeight, plotSize, true);
-		}
-		else if (cg instanceof PlotsGenerator && !plugin.getPermissions().hasPermission(p, "iclaims.plot.auto", false))
-		{
-			plugin.log.log(Level.FINE, "Player '" + p.getName() + "' does not have 'iclaims.plot.auto'. Not Automatically assigning a plot.");
 		}
 	}
 }

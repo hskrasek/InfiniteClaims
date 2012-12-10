@@ -7,6 +7,7 @@ import org.bukkit.generator.ChunkGenerator;
 
 import uk.co.jacekk.bukkit.infiniteplots.PlotsGenerator;
 
+import com.dumptruckman.minecraft.pluginbase.logging.Logging;
 import com.hskrasek.InfiniteClaims.InfiniteClaims;
 import com.hskrasek.InfiniteClaims.configuration.InfiniteClaimsPlotConfig;
 import com.sk89q.worldguard.protection.GlobalRegionManager;
@@ -33,10 +34,11 @@ public class InfiniteClaimsNewWorld implements Listener
 		ChunkGenerator cg = newWorld.getWorld().getGenerator();
 		if (cg instanceof PlotsGenerator)
 		{
-			this.plugin.log.info("Creating a plots file for new InfinitePlots world " + newWorld.getWorld().getName());
+			Logging.info("Creating a plots file for new InfinitePlots world " + newWorld.getWorld().getName());
+			@SuppressWarnings("unused")
 			InfiniteClaimsPlotConfig plotFile = new InfiniteClaimsPlotConfig(this.plugin, newWorld.getWorld());
 			plugin.getIcUtils().getInfiniteClaimsWorlds().add(newWorld.getWorld());
-			this.plugin.log.info("Plot file created!");
+			Logging.info("Plot file created!");
 
 			ProtectedRegion global = new GlobalProtectedRegion("__global__");
 			final StateFlag BUILD = new StateFlag("build", true, RegionGroup.NONE);
@@ -59,7 +61,7 @@ public class InfiniteClaimsNewWorld implements Listener
 			}
 			catch (ProtectionDatabaseException e)
 			{
-				plugin.log.warning("Could not add the '__global__' region for you. You will need to add it yourself.");
+				Logging.warning("Could not add the '__global__' region for you. You will need to add it yourself.");
 				e.printStackTrace();
 			}
 		}

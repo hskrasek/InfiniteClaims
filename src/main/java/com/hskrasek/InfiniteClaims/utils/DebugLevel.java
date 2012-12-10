@@ -2,6 +2,7 @@ package com.hskrasek.InfiniteClaims.utils;
 
 import java.util.logging.Level;
 
+@Deprecated
 public class DebugLevel extends Level
 {
 	/**

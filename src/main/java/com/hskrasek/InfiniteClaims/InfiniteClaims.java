@@ -20,12 +20,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
+import org.mcstats.Metrics.Graph;
+import org.mcstats.Metrics.Plotter;
 
-import com.dumptruckman.minecraft.util.Logging;
+import com.dumptruckman.minecraft.pluginbase.logging.LoggablePlugin;
+import com.dumptruckman.minecraft.pluginbase.logging.Logging;
 import com.hskrasek.InfiniteClaims.commands.HelpCommand;
 import com.hskrasek.InfiniteClaims.commands.NewPlotCommand;
 import com.hskrasek.InfiniteClaims.commands.PlotAdminAddMemberCommand;
 import com.hskrasek.InfiniteClaims.commands.PlotAdminCommand;
+import com.hskrasek.InfiniteClaims.commands.PlotAdminConfigurationCommand;
 import com.hskrasek.InfiniteClaims.commands.PlotAdminInfoCommand;
 import com.hskrasek.InfiniteClaims.commands.PlotAdminRemoveCommand;
 import com.hskrasek.InfiniteClaims.commands.PlotAdminRemoveMemberCommand;
@@ -42,26 +47,21 @@ import com.hskrasek.InfiniteClaims.configuration.InfiniteClaimsConfig;
 import com.hskrasek.InfiniteClaims.configuration.InfiniteClaimsPlotConfig;
 import com.hskrasek.InfiniteClaims.listeners.InfiniteClaimsAutoListener;
 import com.hskrasek.InfiniteClaims.listeners.InfiniteClaimsNewWorld;
-import com.hskrasek.InfiniteClaims.metrics.Metrics;
-import com.hskrasek.InfiniteClaims.metrics.Metrics.Graph;
-import com.hskrasek.InfiniteClaims.metrics.Metrics.Plotter;
 import com.hskrasek.InfiniteClaims.utils.IClaimsMessages;
 import com.hskrasek.InfiniteClaims.utils.InfiniteClaimsUtilities;
 import com.pneumaticraft.commandhandler.CommandHandler;
 import com.sk89q.wepif.PermissionsResolverManager;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-//import multiworld.MultiWorldPlugin;
-//import multiworld.api.MultiWorldAPI;
 
-public class InfiniteClaims extends JavaPlugin
+public class InfiniteClaims extends JavaPlugin implements LoggablePlugin
 {
 	public static final Logger			LOGGER			= Logger.getLogger("Minecraft");
-	public static Logging				log;
+	public Logging				log;
 	private CommandHandler				commandHandler;
 	private InfiniteClaimsPerms			permissionsInterface;
-	protected PluginManager				pluginManager;
-	protected InfiniteClaimsConfig		config;
+	public PluginManager				pluginManager;
+	public InfiniteClaimsConfig		config;
 	public InfiniteClaimsUtilities		icUtils;
 	public int							roadOffsetX		= 4;
 	public int							roadOffsetZ		= 4;
@@ -71,7 +71,6 @@ public class InfiniteClaims extends JavaPlugin
 	public String						signPlacementMethod;
 	public ChatColor					prefixColor;
 	public ChatColor					ownerColor;
-	public boolean						DEBUGGING;
 	public boolean						signsEnabled;
 	public String						pluginPrefix	= ChatColor.WHITE + "[" + ChatColor.RED + "InfiniteClaims" + ChatColor.WHITE + "] ";
 	public PermissionsResolverManager	permissionManager;
@@ -79,8 +78,10 @@ public class InfiniteClaims extends JavaPlugin
 
 	public void onLoad()
 	{
-		log.init(this);
-		log.setDebugLevel(1);
+		pluginManager = this.getServer().getPluginManager();
+		config = new InfiniteClaimsConfig(new File(this.getDataFolder().getAbsolutePath() + File.separator + "config.yml"), this);
+		Logging.init(this);
+		Logging.setDebugLevel(config.getInt("debugging"));
 		messages = new IClaimsMessages(this);
 		icUtils = new InfiniteClaimsUtilities(this);
 		permissionsInterface = new InfiniteClaimsPerms(this);
@@ -93,8 +94,8 @@ public class InfiniteClaims extends JavaPlugin
 
 	public void onDisable()
 	{
-		log.log(Level.INFO, "Disabled!");
-		log.shutdown();
+		Logging.log(Level.INFO, "Disabled!");
+		Logging.shutdown();
 		log = null;
 		config = null;
 		icUtils = null;
@@ -104,24 +105,19 @@ public class InfiniteClaims extends JavaPlugin
 
 	public void onEnable()
 	{
-		pluginManager = this.getServer().getPluginManager();
-		// multiapi = (MultiWorldAPI)((MultiWorldPlugin)
-		// pluginManager.getPlugin("MultiWorld")).getApi();
-		config = new InfiniteClaimsConfig(new File(this.getDataFolder().getAbsolutePath() + File.separator + "config.yml"), this);
 		pluginManager.registerEvents(new InfiniteClaimsAutoListener(this), this);
 		pluginManager.registerEvents(new InfiniteClaimsNewWorld(this), this);
-		signsEnabled = config.getBoolean("signs.enabled");
-		ownerSignPrefix = config.getString("signs.prefix");
-		signPlacementMethod = config.getString("signs.placement");
-		prefixColor = ChatColor.getByChar(config.getString("signs.prefix-color"));
-		ownerColor = ChatColor.getByChar(config.getString("signs.owner-color"));
-		plotHeight = config.getInt("plots.height");
-		maxPlots = config.getInt("plots.max-plots");
-		DEBUGGING = config.getBoolean("debugging");
+		signsEnabled = (Boolean)config.get("signs.enabled");
+		ownerSignPrefix = (String)config.get("signs.prefix");
+		signPlacementMethod = (String)config.get("signs.placement");
+		prefixColor = ChatColor.getByChar((String)config.get("signs.prefix-color"));
+		ownerColor = ChatColor.getByChar((String)config.get("signs.owner-color"));
+		plotHeight = (Integer)config.get("plots.height");
+		maxPlots = (Integer)config.get("plots.max-plots");
 
 		this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Updater(this), 40, 432000);
 
-		log.log(Level.INFO, "Enabled!");
+		Logging.log(Level.INFO, "Enabled!");
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
@@ -150,6 +146,7 @@ public class InfiniteClaims extends JavaPlugin
 		this.commandHandler.registerCommand(new PlotAdminInfoCommand(this));
 		this.commandHandler.registerCommand(new PlotAdminAddMemberCommand(this));
 		this.commandHandler.registerCommand(new PlotAdminRemoveMemberCommand(this));
+		this.commandHandler.registerCommand(new PlotAdminConfigurationCommand(this));
 	}
 
 	private void setupPlotWorlds()
@@ -201,15 +198,15 @@ public class InfiniteClaims extends JavaPlugin
 			while (plotterIt.hasNext())
 			{
 				Plotter currentPlotter = plotterIt.next();
-				this.log.log(Level.INFO, currentPlotter.getColumnName());
+				Logging.log(Level.INFO, currentPlotter.getColumnName());
 			}
 			icMetrics.addGraph(worldNameGraph);
 			icMetrics.start();
-			log.info("Metrics started! To opt-out go to /plugins/PluginMetrics/config.yml and change opt-out to true.");
+			Logging.info("Metrics started! To opt-out go to /plugins/PluginMetrics/config.yml and change opt-out to true.");
 		}
 		catch (IOException e)
 		{
-			log.warning(e.getMessage());
+			Logging.warning(e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -238,10 +235,12 @@ public class InfiniteClaims extends JavaPlugin
 	{
 		Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
 
-		// WorldGuard may not be loaded
+		/**
+		 * @TODO: Possibly remove this code, for it may no longer be necessary
+		 */
 		if (plugin == null || !(plugin instanceof WorldGuardPlugin))
 		{
-			log.severe("WorldEdit MUST BE INSTALLED!");
+			Logging.severe("WorldEdit MUST BE INSTALLED!");
 			return null;
 		}
 		return (WorldGuardPlugin) plugin;
@@ -251,10 +250,12 @@ public class InfiniteClaims extends JavaPlugin
 	{
 		Plugin plugin = getServer().getPluginManager().getPlugin("WorldEdit");
 
-		// WorldEdit may not be loaded
+		/**
+		 * @TODO: Possibly remove this code, for it may no longer be necessary
+		 */
 		if (plugin == null || !(plugin instanceof WorldEditPlugin))
 		{
-			log.severe("WorlEdit MUST BE INSTALLED");
+			Logging.severe("WorlEdit MUST BE INSTALLED");
 			return null;
 		}
 		return (WorldEditPlugin) plugin;
@@ -289,10 +290,14 @@ public class InfiniteClaims extends JavaPlugin
 
 				if ((tempVersion = bufferedReader.readLine()) != null)
 				{
+					if (plugin.getDescription().getVersion().contains("SNAPSHOT"))
+					{
+						return;
+					}
 					if (!this.plugin.getDescription().getVersion().equals(tempVersion))
 					{
-						this.plugin.log.info("Found a different version available: " + tempVersion);
-						this.plugin.log.info("You can get it at http://dev.bukkit.org/server-mods/infiniteclaims");
+						Logging.info("Found a different version available: " + tempVersion);
+						Logging.info("You can get it at http://dev.bukkit.org/server-mods/infiniteclaims");
 					}
 					bufferedReader.close();
 					urlConnection.getInputStream().close();
@@ -303,11 +308,10 @@ public class InfiniteClaims extends JavaPlugin
 					bufferedReader.close();
 					urlConnection.getInputStream().close();
 				}
-				System.out.println("Done!");
 			}
 			catch (final Exception e)
 			{
-				this.plugin.log.warning("Could not check if InfiniteClaims is up-to-date, will try again later.");
+				Logging.warning("Could not check if InfiniteClaims is up-to-date, will try again later.");
 			}
 		}
 

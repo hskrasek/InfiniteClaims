@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -12,6 +13,7 @@ import org.bukkit.configuration.file.YamlConfigurationOptions;
 
 import uk.co.jacekk.bukkit.infiniteplots.PlotsGenerator;
 
+import com.dumptruckman.minecraft.pluginbase.logging.Logging;
 import com.hskrasek.InfiniteClaims.InfiniteClaims;
 import com.hskrasek.InfiniteClaims.exceptions.PlayerNotFoundException;
 import com.hskrasek.InfiniteClaims.exceptions.PlotNotFoundException;
@@ -41,37 +43,45 @@ public class InfiniteClaimsPlotConfig
 		String header = this.getHeader();
 		plotOptions.header(header);
 
-		if (!plotFile.exists())
+		try
 		{
-			plotOptions.copyHeader(true);
-			for (String key : plotDefaults.keySet())
+			if (!plotFile.exists())
 			{
-				plot.set(key, plotDefaults.get(key));
+				plotOptions.copyHeader(true);
+				for (String key : plotDefaults.keySet())
+				{
+					plot.set(key, plotDefaults.get(key));
+				}
+	
+				try
+				{
+					plot.save(plotFile);
+				}
+				catch (IOException e)
+				{
+					Logging.severe("Could not create a plot file for the World '" + plotWorld.getName() + "'. Disabling InfiniteClaims!");
+					this.plugin.getPluginLoader().disablePlugin(plugin);
+					e.printStackTrace();
+				}
 			}
-
-			try
+			else
 			{
-				plot.save(plotFile);
-			}
-			catch (IOException e)
-			{
-				this.plugin.log.severe("Could not create a plot file for the World '" + plotWorld.getName() + "'. Disabling InfiniteClaims!");
-				this.plugin.getPluginLoader().disablePlugin(plugin);
-				e.printStackTrace();
+				try
+				{
+					plot.load(plotFile);
+				}
+				catch (Exception e)
+				{
+					Logging.severe("Could not load the plots for the World '" + plotWorld.getName() + "'. Disabling InfiniteClaims!");
+					this.plugin.getPluginLoader().disablePlugin(plugin);
+					e.printStackTrace();
+				}
 			}
 		}
-		else
+		catch(NullPointerException e)
 		{
-			try
-			{
-				plot.load(plotFile);
-			}
-			catch (Exception e)
-			{
-				this.plugin.log.severe("Could not load the plots for the World '" + plotWorld.getName() + "'. Disabling InfiniteClaims!");
-				this.plugin.getPluginLoader().disablePlugin(plugin);
-				e.printStackTrace();
-			}
+			Logging.log(Level.SEVERE, "There was a problem loading the plot file for %n, it may not be a plot world.", plotWorld.getName());
+			Logging.info("%n is using the generator: %n", plotWorld.getName(), plotWorld.getGenerator().toString());
 		}
 	}
 
@@ -124,7 +134,7 @@ public class InfiniteClaimsPlotConfig
 		}
 		catch (IOException e)
 		{
-			this.plugin.log.severe("Could not save the plot file for '" + plotWorld.getName() + "'.");
+			Logging.severe("Could not save the plot file for '" + plotWorld.getName() + "'.");
 			e.printStackTrace();
 		}
 	}

@@ -23,6 +23,7 @@ import org.bukkit.generator.ChunkGenerator;
 
 import uk.co.jacekk.bukkit.infiniteplots.PlotsGenerator;
 
+import com.dumptruckman.minecraft.pluginbase.logging.Logging;
 import com.hskrasek.InfiniteClaims.InfiniteClaims;
 import com.hskrasek.InfiniteClaims.configuration.InfiniteClaimsPlotConfig;
 import com.hskrasek.InfiniteClaims.exceptions.InvalidWorldException;
@@ -64,6 +65,7 @@ public class InfiniteClaimsUtilities
 	public InfiniteClaimsUtilities(InfiniteClaims instance)
 	{
 		plugin = instance;
+		Logging.init(plugin);
 		wgp = plugin.getWorldGuard();
 		wep = plugin.getWorldEdit();
 		plotHeight = plugin.plotHeight;
@@ -271,14 +273,14 @@ public class InfiniteClaimsUtilities
 					e.printStackTrace();
 				}
 
-				p.sendMessage(pluginPrefix + plugin.messages.getMessage("plots-left", (mgr.getRegionCountOfPlayer(lp) == plugin.maxPlots ? 0 : (plugin.maxPlots - mgr.getRegionCountOfPlayer(lp)))));
+				p.sendMessage(pluginPrefix + plugin.messages.getMessage("plots-left", (mgr.getRegionCountOfPlayer(lp) == getPlayerPlotMax(p) ? 0 : (getPlayerPlotMax(p) - mgr.getRegionCountOfPlayer(lp)))));
 
 				p.teleport(new Location(w, bottomRight.getX() + (plotSize / 2), y + 2, bottomRight.getZ() + (plotSize), 180, 0));
 
 				savePlot(p, "plot" + (playerRegionCount + 1), new Location(w, bottomRight.getX() + (plotSize / 2), y + 1, bottomRight.getZ() + (plotSize)));
 
 			}
-			else if (playerRegionCount < plugin.maxPlots && !isAuto)
+			else if (playerRegionCount < getPlayerPlotMax(p) && !isAuto)
 			{
 				if (plugin.signsEnabled)
 				{
@@ -349,9 +351,9 @@ public class InfiniteClaimsUtilities
 					e.printStackTrace();
 				}
 
-				p.sendMessage(pluginPrefix + plugin.messages.getMessage("plots-left", (mgr.getRegionCountOfPlayer(lp) == plugin.maxPlots ? 0 : (plugin.maxPlots - mgr.getRegionCountOfPlayer(lp)))));
+				p.sendMessage(pluginPrefix + plugin.messages.getMessage("plots-left", (mgr.getRegionCountOfPlayer(lp) == getPlayerPlotMax(p) ? 0 : (getPlayerPlotMax(p) - mgr.getRegionCountOfPlayer(lp)))));
 			}
-			else if (playerRegionCount == plugin.maxPlots)
+			else if (playerRegionCount == getPlayerPlotMax(p))
 			{
 				p.sendMessage(pluginPrefix + plugin.messages.getMessage("max-plots-reached", null));
 			}
@@ -481,7 +483,7 @@ public class InfiniteClaimsUtilities
 		}
 		else
 		{
-			plugin.getServer().getPlayer(plotOwner).sendMessage(pluginPrefix + plugin.messages.getMessage("not-plotworld-error", plotWorld));
+			plugin.getServer().getPlayer(plotOwner).sendMessage(pluginPrefix + plugin.messages.getMessage("not-plotworld-error", plotWorld.getName()));
 		}
 	}
 
@@ -528,7 +530,7 @@ public class InfiniteClaimsUtilities
 		}
 		else
 		{
-			plugin.getServer().getPlayer(plotOwner).sendMessage(pluginPrefix + plugin.messages.getMessage("not-plotworld-error", plotWorld));
+			plugin.getServer().getPlayer(plotOwner).sendMessage(pluginPrefix + plugin.messages.getMessage("not-plotworld-error", plotWorld.getName()));
 		}
 	}
 
@@ -609,9 +611,10 @@ public class InfiniteClaimsUtilities
 		}
 		catch (InvalidWorldException e)
 		{
+			plugin.getServer().getPlayer(sender.getName()).sendMessage(pluginPrefix + plugin.messages.getMessage("not-plotworld-error", worldName));
 			e.printStackTrace();
 		}
-
+		
 		sender.sendMessage(pluginPrefix + plugin.messages.getMessage("removed-plot", playerName, plotName, worldName));
 	}
 
@@ -630,12 +633,12 @@ public class InfiniteClaimsUtilities
 		catch (PlotNotFoundException e)
 		{
 			thePlayer.sendMessage(pluginPrefix + plugin.messages.getMessage("plot-not-found", plotName));
-			plugin.log.log(Level.SEVERE, e.getMessage());
+			Logging.log(Level.SEVERE, e.getMessage());
 		}
 		catch (PlayerNotFoundException e)
 		{
 			thePlayer.sendMessage(pluginPrefix + plugin.messages.getMessage("player-not-found", null));
-			plugin.log.log(Level.SEVERE, e.getMessage());
+			Logging.log(Level.SEVERE, e.getMessage());
 		}
 	}
 
@@ -653,12 +656,12 @@ public class InfiniteClaimsUtilities
 		catch (PlotNotFoundException e)
 		{
 			thePlayer.sendMessage(pluginPrefix + plugin.messages.getMessage("plot-not-found", plotName));
-			plugin.log.log(Level.SEVERE, e.getMessage());
+			Logging.log(Level.SEVERE, e.getMessage());
 		}
 		catch (PlayerNotFoundException e)
 		{
 			thePlayer.sendMessage(pluginPrefix + plugin.messages.getMessage("player-not-found", null));
-			plugin.log.log(Level.SEVERE, e.getMessage());
+			Logging.log(Level.SEVERE, e.getMessage());
 		}
 	}
 
@@ -725,6 +728,11 @@ public class InfiniteClaimsUtilities
 		}
 
 		return false;
+	}
+	
+	public int getPlayerPlotMax(Player player)
+	{
+		return plugin.config.getPlayerMaxPlots(player);
 	}
 
 	public int getNumberPlotsForWorld(World plotWorld)
@@ -806,7 +814,6 @@ public class InfiniteClaimsUtilities
 		byte se = 0xE; // South East
 		byte sw = 0x2; // South West
 		byte nw = 0x6; // North West
-		// byte w = 0x4;
 		byte s = 0x0;
 
 		if (facingDirection == BlockFace.SOUTH_WEST)

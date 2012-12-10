@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+@Deprecated
 public class InfiniteClaimsLogger extends Logger
 {
 	FileHandler	fileHandler;
