@@ -14,3 +14,7 @@
 *.class
 
 *.class
+
+*.jar
+
+*.zip
