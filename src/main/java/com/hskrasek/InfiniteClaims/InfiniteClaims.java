@@ -81,7 +81,7 @@ public class InfiniteClaims extends JavaPlugin implements LoggablePlugin
 		pluginManager = this.getServer().getPluginManager();
 		config = new InfiniteClaimsConfig(new File(this.getDataFolder().getAbsolutePath() + File.separator + "config.yml"), this);
 		Logging.init(this);
-		Logging.setDebugLevel(config.getInt("debugging"));
+		Logging.setDebugLevel((Integer)config.get("debugging"));
 		messages = new IClaimsMessages(this);
 		icUtils = new InfiniteClaimsUtilities(this);
 		permissionsInterface = new InfiniteClaimsPerms(this);
@@ -113,9 +113,9 @@ public class InfiniteClaims extends JavaPlugin implements LoggablePlugin
 		prefixColor = ChatColor.getByChar((String)config.get("signs.prefix-color"));
 		ownerColor = ChatColor.getByChar((String)config.get("signs.owner-color"));
 		plotHeight = (Integer)config.get("plots.height");
-		maxPlots = (Integer)config.get("plots.max-plots");
 
-		this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Updater(this), 40, 432000);
+//		this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Updater(this), 40, 432000);
+		getServer().getScheduler().runTaskAsynchronously(this, new Updater(this));
 
 		Logging.log(Level.INFO, "Enabled!");
 	}
