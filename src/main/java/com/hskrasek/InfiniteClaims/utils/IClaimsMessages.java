@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -16,6 +15,7 @@ import java.util.logging.Level;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import com.dumptruckman.minecraft.pluginbase.logging.Logging;
 import com.hskrasek.InfiniteClaims.InfiniteClaims;
 
 public class IClaimsMessages
@@ -33,7 +33,7 @@ public class IClaimsMessages
 		}
 		else if (!currentMessageVersion().equals(userMessageVersion()))
 		{
-
+			updateUsersMessageFile();
 		}
 		else
 		{
@@ -80,9 +80,11 @@ public class IClaimsMessages
 		}
 		catch (IOException e)
 		{
-			plugin.log.log(Level.SEVERE, "Was unable to save the messages.yml to plugin directory. Report following stack trace to the developer.");
+			Logging.log(Level.SEVERE, "Was unable to save the messages.yml to plugin directory. Report following stack trace to the developer.");
 			e.printStackTrace();
 		}
+		
+		messages = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "messages.yml"));
 	}
 
 	private String currentMessageVersion()
@@ -112,7 +114,7 @@ public class IClaimsMessages
 		}
 		catch (IOException e)
 		{
-			plugin.log.log(Level.SEVERE, "Was not able to access the plugin jar while loading the messages.yml");
+			Logging.log(Level.SEVERE, "Was not able to access the plugin jar while loading the messages.yml");
 			e.printStackTrace();
 		}
 		catch (URISyntaxException e)
@@ -129,7 +131,7 @@ public class IClaimsMessages
 			}
 			catch (IOException e)
 			{
-				plugin.log.log(Level.SEVERE, "Was not able to load the InfiniteClaims JAR file.");
+				Logging.log(Level.SEVERE, "Was not able to load the InfiniteClaims JAR file.");
 				e.printStackTrace();
 			}
 			JarEntry jarEntry = jarFile.getJarEntry("messages.yml");
@@ -142,7 +144,7 @@ public class IClaimsMessages
 				}
 				catch (IOException e)
 				{
-					plugin.log.log(Level.SEVERE, "Was not able to load the messages file from the plugin JAR.");
+					Logging.log(Level.SEVERE, "Was not able to load the messages file from the plugin JAR.");
 					e.printStackTrace();
 				}
 			}
@@ -174,7 +176,7 @@ public class IClaimsMessages
 		}
 		catch (IOException e)
 		{
-			plugin.log.log(Level.SEVERE, "Was unable to update the messages.yml!");
+			Logging.log(Level.SEVERE, "Was unable to update the messages.yml!");
 			e.printStackTrace();
 		}
 	}
