@@ -113,9 +113,9 @@ public class InfiniteClaimsPlotConfig
 		}
 	}
 
-	public void removePlot(String player)
+	public void removePlot(String player, String plotName)
 	{
-		plot.set("plots." + player, null);
+		plot.set("plots." + player + "." + plotName, null);
 		this.save();
 	}
 
