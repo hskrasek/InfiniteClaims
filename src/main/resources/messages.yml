@@ -12,4 +12,4 @@ messages:
     removed-plot: "Removed &c%s&f's plot: &c%s&f. Removed from '&c%s&f'."
     plot-not-found: "&c%s &fis not a valid plot. Please try again."
     player-not-found: "Could not find a plot for that player. Please try again."
-    
+    plot-reset: "Your plot has been reset."
