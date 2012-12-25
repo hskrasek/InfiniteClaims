@@ -47,6 +47,7 @@ public class PlotManagementResetCommand extends IClaimsCommand
 			try
 			{
 				icUtils.regeneratePlot(player.getName(), plotName, player.getWorld().getName());
+				player.sendMessage(plugin.messages.getMessage("plot-reset", null));
 			}
 			catch (InvalidWorldException e)
 			{
