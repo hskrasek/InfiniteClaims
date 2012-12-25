@@ -407,6 +407,7 @@ public class InfiniteClaimsUtilities
 				if (plugin.signPlacementMethod.equals("entrance"))
 				{
 					Location entranceLocation1 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) - 2, plotHeight + 3, bottomRight.getZ() + (plotSize));
+					player.sendMessage("placing signs");
 					Location entranceLocation2 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) + 2, plotHeight + 3, bottomRight.getZ() + (plotSize));
 					placeSign(entranceLocation1, plugin.ownerSignPrefix, player.getName(), BlockFace.SOUTH);
 					placeSign(entranceLocation2, plugin.ownerSignPrefix, player.getName(), BlockFace.SOUTH);
@@ -594,7 +595,7 @@ public class InfiniteClaimsUtilities
 		mgr.removeRegion(fullPlotName);
 
 		InfiniteClaimsPlotConfig plotFile = new InfiniteClaimsPlotConfig(this.plugin, plugin.getServer().getWorld(worldName));
-		plotFile.removePlot(playerName);
+		plotFile.removePlot(playerName, plotName);
 
 		try
 		{
@@ -790,7 +791,7 @@ public class InfiniteClaimsUtilities
 	private void removeSign(Location blockLocation)
 	{
 		Block signBlock = blockLocation.getBlock();
-		signBlock.setType(Material.AIR);
+		signBlock.setType(Material.STONE);
 	}
 
 	private void placeSign(String plotOwnerPrefix, String plotOwner, Block theBlock, BlockFace facingDirection)
@@ -800,10 +801,12 @@ public class InfiniteClaimsUtilities
 		theSign.setLine(1, plugin.prefixColor + plotOwnerPrefix);
 		if (plotOwner.length() > 15)
 		{
-			String plotOwnerFirst = plotOwner.substring(0, 13);
-			String plotOwnerSecond = plotOwner.substring(13);
-			theSign.setLine(2, plugin.ownerColor + plotOwnerFirst);
-			theSign.setLine(3, plugin.ownerColor + plotOwnerSecond);
+			theSign.setLine(2, plotOwner.substring(0, (plotOwner.length()/2)));
+			theSign.setLine(3, plotOwner.substring(plotOwner.length()/2));
+//			String plotOwnerFirst = plotOwner.substring(0, 12);
+//			String plotOwnerSecond = plotOwner.substring(12);
+//			theSign.setLine(2, plugin.ownerColor + plotOwnerFirst);
+//			theSign.setLine(3, plugin.ownerColor + plotOwnerSecond);
 		}
 		else
 		{
