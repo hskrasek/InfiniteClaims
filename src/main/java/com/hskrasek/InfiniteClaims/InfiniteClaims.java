@@ -112,9 +112,9 @@ public class InfiniteClaims extends JavaPlugin implements LoggablePlugin
 		signPlacementMethod = (String)config.get("signs.placement");
 		prefixColor = ChatColor.getByChar((String)config.get("signs.prefix-color"));
 		ownerColor = ChatColor.getByChar((String)config.get("signs.owner-color"));
-		plotHeight = (Integer)config.get("plots.height");
+		plotHeight = Integer.parseInt((String) config.get("plots.height"));
+		Logging.info("Plot height is set to: %d", Integer.parseInt((String) config.get("plots.height")));
 
-//		this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Updater(this), 40, 432000);
 		getServer().getScheduler().runTaskAsynchronously(this, new Updater(this));
 
 		Logging.log(Level.INFO, "Enabled!");

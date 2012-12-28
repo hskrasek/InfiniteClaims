@@ -58,7 +58,6 @@ public class InfiniteClaimsUtilities
 	WorldEditPlugin		wep;
 	static String		pluginPrefix	= ChatColor.WHITE + "[" + ChatColor.RED + "InfiniteClaims" + ChatColor.WHITE + "] ";
 	static int			walkwaySize		= 7;
-	static int			plotHeight;
 	File				plotFile;
 	int					plotSize;
 
@@ -68,7 +67,6 @@ public class InfiniteClaimsUtilities
 		Logging.init(plugin);
 		wgp = plugin.getWorldGuard();
 		wep = plugin.getWorldEdit();
-		plotHeight = plugin.plotHeight;
 	}
 
 	public void plotAssigner(World w, Player p, int y, int plotSize, boolean isAuto)
@@ -203,7 +201,6 @@ public class InfiniteClaimsUtilities
 			playersPlot.setOwners(owner);
 
 			RegionManager mgr = wgp.getGlobalRegionManager().get(w);
-
 			if (playerRegionCount == 0 && isAuto)
 			{
 				if (plugin.signsEnabled)
@@ -369,6 +366,32 @@ public class InfiniteClaimsUtilities
 		plotFile.setPlot(thePlayer.getName(), plotName, coords);
 	}
 
+	private void regeneratePlot(String adminName, String playerName, String plotName, String worldName) throws InvalidWorldException
+	{
+		World claimsWorld = plugin.getServer().getWorld(worldName);
+		Player player = new IClaimsPlayer(adminName, plugin);
+		RegionManager mgr = wgp.getRegionManager(claimsWorld);
+		LocalSession session = wep.getSession(player);
+
+		BukkitPlayer bukkitPlayer = wep.wrapPlayer(player);
+
+		ProtectedRegion plotRegion = mgr.getRegion(playerName + plotName);
+
+		if (plotRegion != null)
+		{
+			LocalWorld localClaimsWorld = wep.wrapPlayer(new IClaimsPlayer(playerName, plugin)).getWorld();
+			Vector minVector = plotRegion.getMinimumPoint().toBlockPoint();
+			Vector maxVector = plotRegion.getMaximumPoint().toBlockPoint();
+			Region plotRegionSelection = new CuboidRegion(localClaimsWorld, minVector, maxVector);
+
+			RegionMask plotMask = new RegionMask(plotRegionSelection);
+			EditSession editSession = session.createEditSession(bukkitPlayer);
+			session.setMask(plotMask);
+			localClaimsWorld.regenerate(plotRegionSelection, editSession);
+			session.setMask(null);
+		}
+	}
+
 	/**
 	 * 
 	 * @throws InvalidWorldException
@@ -393,22 +416,21 @@ public class InfiniteClaimsUtilities
 
 			RegionMask plotMask = new RegionMask(plotRegionSelection);
 			EditSession editSession = session.createEditSession(bukkitPlayer);
-			session.setMask(null);
-			localClaimsWorld.regenerate(plotRegionSelection, editSession);
 			session.setMask(plotMask);
+			localClaimsWorld.regenerate(plotRegionSelection, editSession);
+			session.setMask(null);
 
-			Location bottomRight = new Location(claimsWorld, plotRegion.getMinimumPoint().getX(), plotRegion.getMinimumPoint().getY(), plotRegion.getMinimumPoint().getZ()); 
-			Location bottomLeft = new Location(claimsWorld, bottomRight.getX() + (plotSize - 1), plotHeight, bottomRight.getZ());
-			Location topRight = new Location(claimsWorld, bottomRight.getX(), plotHeight, bottomRight.getZ() + (plotSize - 1));
-			Location topLeft = new Location(claimsWorld, bottomRight.getX() + (plotSize - 1), plotHeight, bottomRight.getZ() + (plotSize - 1));
+			Location bottomRight = new Location(claimsWorld, plotRegion.getMinimumPoint().getX(), plotRegion.getMinimumPoint().getY(), plotRegion.getMinimumPoint().getZ());
+			Location bottomLeft = new Location(claimsWorld, bottomRight.getX() + (plotSize - 1), plugin.plotHeight, bottomRight.getZ());
+			Location topRight = new Location(claimsWorld, bottomRight.getX(), plugin.plotHeight, bottomRight.getZ() + (plotSize - 1));
+			Location topLeft = new Location(claimsWorld, bottomRight.getX() + (plotSize - 1), plugin.plotHeight, bottomRight.getZ() + (plotSize - 1));
 
 			if (plugin.signsEnabled)
 			{
 				if (plugin.signPlacementMethod.equals("entrance"))
 				{
-					Location entranceLocation1 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) - 2, plotHeight + 3, bottomRight.getZ() + (plotSize));
-					player.sendMessage("placing signs");
-					Location entranceLocation2 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) + 2, plotHeight + 3, bottomRight.getZ() + (plotSize));
+					Location entranceLocation1 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) - 2, plugin.plotHeight + 3, bottomRight.getZ() + (plotSize));
+					Location entranceLocation2 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) + 2, plugin.plotHeight + 3, bottomRight.getZ() + (plotSize));
 					placeSign(entranceLocation1, plugin.ownerSignPrefix, player.getName(), BlockFace.SOUTH);
 					placeSign(entranceLocation2, plugin.ownerSignPrefix, player.getName(), BlockFace.SOUTH);
 				}
@@ -432,8 +454,8 @@ public class InfiniteClaimsUtilities
 				}
 				else if (plugin.signPlacementMethod.equals("both"))
 				{
-					Location entranceLocation1 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) - 2, plotHeight + 3, bottomRight.getZ() + (plotSize));
-					Location entranceLocation2 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) + 2, plotHeight + 3, bottomRight.getZ() + (plotSize));
+					Location entranceLocation1 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) - 2, plugin.plotHeight + 3, bottomRight.getZ() + (plotSize));
+					Location entranceLocation2 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) + 2, plugin.plotHeight + 3, bottomRight.getZ() + (plotSize));
 					placeSign(entranceLocation1, plugin.ownerSignPrefix, player.getName(), BlockFace.SOUTH);
 					placeSign(entranceLocation2, plugin.ownerSignPrefix, player.getName(), BlockFace.SOUTH);
 
@@ -542,56 +564,97 @@ public class InfiniteClaimsUtilities
 		RegionManager mgr = wgp.getRegionManager(plugin.getServer().getWorld(worldName));
 		World claimsWorld = plugin.getServer().getWorld(worldName);
 		ProtectedRegion plotRegion = mgr.getRegion(fullPlotName);
-		
-		Location bottomRight = new Location(claimsWorld, plotRegion.getMinimumPoint().getX(), plotRegion.getMinimumPoint().getY(), plotRegion.getMinimumPoint().getZ()); 
-		Location bottomLeft = new Location(claimsWorld, bottomRight.getX() + (plotSize - 1), plotHeight, bottomRight.getZ());
-		Location topRight = new Location(claimsWorld, bottomRight.getX(), plotHeight, bottomRight.getZ() + (plotSize - 1));
-		Location topLeft = new Location(claimsWorld, bottomRight.getX() + (plotSize - 1), plotHeight, bottomRight.getZ() + (plotSize - 1));
-		
-		if (plugin.signsEnabled)
+
+		Location bottomRight = null;
+		Location bottomLeft = null;
+		Location topRight = null;
+		Location topLeft = null;
+
+		try
 		{
-			if (plugin.signPlacementMethod.equals("entrance"))
-			{
-				Location entranceLocation1 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) - 2, plotHeight + 3, bottomRight.getZ() + (plotSize));
-				Location entranceLocation2 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) + 2, plotHeight + 3, bottomRight.getZ() + (plotSize));
-				removeSign(entranceLocation1);
-				removeSign(entranceLocation2);
-			}
-			else if (plugin.signPlacementMethod.equals("corners"))
-			{
-				Location bottomRightTest = new Location(claimsWorld, bottomRight.getX() - 1, bottomRight.getY() + 3, bottomRight.getZ() - 1);
-				removeSign(bottomRightTest);
-
-				Location bottomLeftTest = new Location(claimsWorld, bottomLeft.getX() + 1, bottomLeft.getY() + 3, bottomLeft.getZ() - 1);
-				removeSign(bottomLeftTest);
-
-				Location topRightSign = new Location(claimsWorld, topRight.getX() - 1, topRight.getY() + 3, topRight.getZ() + 1);
-				removeSign(topRightSign);
-
-				Location topLeftSign = new Location(claimsWorld, topLeft.getX() + 1, topLeft.getY() + 3, topLeft.getZ() + 1);
-				removeSign(topLeftSign);
-			}
-			else if (plugin.signPlacementMethod.equals("both"))
-			{
-				Location entranceLocation1 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) - 2, plotHeight + 3, bottomRight.getZ() + (plotSize));
-				Location entranceLocation2 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) + 2, plotHeight + 3, bottomRight.getZ() + (plotSize));
-				removeSign(entranceLocation1);
-				removeSign(entranceLocation2);
-
-				Location bottomRightTest = new Location(claimsWorld, bottomRight.getX() - 1, bottomRight.getY() + 3, bottomRight.getZ() - 1);
-				removeSign(bottomRightTest);
-
-				Location bottomLeftTest = new Location(claimsWorld, bottomLeft.getX() + 1, bottomLeft.getY() + 3, bottomLeft.getZ() - 1);
-				removeSign(bottomLeftTest);
-
-				Location topRightSign = new Location(claimsWorld, topRight.getX() - 1, topRight.getY() + 3, topRight.getZ() + 1);
-				removeSign(topRightSign);
-
-				Location topLeftSign = new Location(claimsWorld, topLeft.getX() + 1, topLeft.getY() + 3, topLeft.getZ() + 1);
-				removeSign(topLeftSign);
-			}
+			bottomRight = new Location(claimsWorld, plotRegion.getMinimumPoint().getX(), plotRegion.getMinimumPoint().getY(), plotRegion.getMinimumPoint().getZ());
+			bottomLeft = new Location(claimsWorld, bottomRight.getX() + (plotSize - 1), plugin.plotHeight, bottomRight.getZ());
+			topRight = new Location(claimsWorld, bottomRight.getX(), plugin.plotHeight, bottomRight.getZ() + (plotSize - 1));
+			topLeft = new Location(claimsWorld, bottomRight.getX() + (plotSize - 1), plugin.plotHeight, bottomRight.getZ() + (plotSize - 1));
 		}
-		
+		catch (NullPointerException e1)
+		{
+			plugin.getServer().getPlayer(sender.getName()).sendMessage(pluginPrefix + plugin.messages.getMessage("plot-not-found", plotName));
+			return;
+		}
+
+		try
+		{
+			regeneratePlot(((Player) sender).getName(), playerName, plotName, worldName);
+		}
+		catch (InvalidWorldException e)
+		{
+			plugin.getServer().getPlayer(sender.getName()).sendMessage(pluginPrefix + plugin.messages.getMessage("not-plotworld-error", worldName));
+			return;
+		}
+
+		// if (plugin.signsEnabled)
+		// {
+		// if (plugin.signPlacementMethod.equals("entrance"))
+		// {
+		// Location entranceLocation1 = new Location(claimsWorld,
+		// bottomRight.getX() + (plotSize / 2) - 2, plugin.plotHeight + 3,
+		// bottomRight.getZ() + (plotSize));
+		// Location entranceLocation2 = new Location(claimsWorld,
+		// bottomRight.getX() + (plotSize / 2) + 2, plugin.plotHeight + 3,
+		// bottomRight.getZ() + (plotSize));
+		// removeSign(entranceLocation1);
+		// removeSign(entranceLocation2);
+		// }
+		// else if (plugin.signPlacementMethod.equals("corners"))
+		// {
+		// Location bottomRightTest = new Location(claimsWorld,
+		// bottomRight.getX() - 1, bottomRight.getY() + 3, bottomRight.getZ() -
+		// 1);
+		// removeSign(bottomRightTest);
+		//
+		// Location bottomLeftTest = new Location(claimsWorld, bottomLeft.getX()
+		// + 1, bottomLeft.getY() + 3, bottomLeft.getZ() - 1);
+		// removeSign(bottomLeftTest);
+		//
+		// Location topRightSign = new Location(claimsWorld, topRight.getX() -
+		// 1, topRight.getY() + 3, topRight.getZ() + 1);
+		// removeSign(topRightSign);
+		//
+		// Location topLeftSign = new Location(claimsWorld, topLeft.getX() + 1,
+		// topLeft.getY() + 3, topLeft.getZ() + 1);
+		// removeSign(topLeftSign);
+		// }
+		// else if (plugin.signPlacementMethod.equals("both"))
+		// {
+		// Location entranceLocation1 = new Location(claimsWorld,
+		// bottomRight.getX() + (plotSize / 2) - 2, plugin.plotHeight + 3,
+		// bottomRight.getZ() + (plotSize));
+		// Location entranceLocation2 = new Location(claimsWorld,
+		// bottomRight.getX() + (plotSize / 2) + 2, plugin.plotHeight + 3,
+		// bottomRight.getZ() + (plotSize));
+		// removeSign(entranceLocation1);
+		// removeSign(entranceLocation2);
+		//
+		// Location bottomRightTest = new Location(claimsWorld,
+		// bottomRight.getX() - 1, bottomRight.getY() + 3, bottomRight.getZ() -
+		// 1);
+		// removeSign(bottomRightTest);
+		//
+		// Location bottomLeftTest = new Location(claimsWorld, bottomLeft.getX()
+		// + 1, bottomLeft.getY() + 3, bottomLeft.getZ() - 1);
+		// removeSign(bottomLeftTest);
+		//
+		// Location topRightSign = new Location(claimsWorld, topRight.getX() -
+		// 1, topRight.getY() + 3, topRight.getZ() + 1);
+		// removeSign(topRightSign);
+		//
+		// Location topLeftSign = new Location(claimsWorld, topLeft.getX() + 1,
+		// topLeft.getY() + 3, topLeft.getZ() + 1);
+		// removeSign(topLeftSign);
+		// }
+		// }
+
 		mgr.removeRegion(fullPlotName);
 
 		InfiniteClaimsPlotConfig plotFile = new InfiniteClaimsPlotConfig(this.plugin, plugin.getServer().getWorld(worldName));
@@ -606,16 +669,6 @@ public class InfiniteClaimsUtilities
 			e.printStackTrace();
 		}
 
-		try
-		{
-			regeneratePlot(playerName, plotName, worldName);
-		}
-		catch (InvalidWorldException e)
-		{
-			plugin.getServer().getPlayer(sender.getName()).sendMessage(pluginPrefix + plugin.messages.getMessage("not-plotworld-error", worldName));
-			e.printStackTrace();
-		}
-		
 		sender.sendMessage(pluginPrefix + plugin.messages.getMessage("removed-plot", playerName, plotName, worldName));
 	}
 
@@ -730,7 +783,7 @@ public class InfiniteClaimsUtilities
 
 		return false;
 	}
-	
+
 	public int getPlayerPlotMax(Player player)
 	{
 		return plugin.config.getPlayerMaxPlots(player);
@@ -787,11 +840,11 @@ public class InfiniteClaimsUtilities
 
 		this.placeSign(plotOwnerPrefix, plotOwner, signBlock, facingDirection);
 	}
-	
+
 	private void removeSign(Location blockLocation)
 	{
 		Block signBlock = blockLocation.getBlock();
-		signBlock.setType(Material.STONE);
+		signBlock.setType(Material.AIR);
 	}
 
 	private void placeSign(String plotOwnerPrefix, String plotOwner, Block theBlock, BlockFace facingDirection)
@@ -801,12 +854,12 @@ public class InfiniteClaimsUtilities
 		theSign.setLine(1, plugin.prefixColor + plotOwnerPrefix);
 		if (plotOwner.length() > 15)
 		{
-			theSign.setLine(2, plotOwner.substring(0, (plotOwner.length()/2)));
-			theSign.setLine(3, plotOwner.substring(plotOwner.length()/2));
-//			String plotOwnerFirst = plotOwner.substring(0, 12);
-//			String plotOwnerSecond = plotOwner.substring(12);
-//			theSign.setLine(2, plugin.ownerColor + plotOwnerFirst);
-//			theSign.setLine(3, plugin.ownerColor + plotOwnerSecond);
+			theSign.setLine(2, plotOwner.substring(0, (plotOwner.length() / 2)));
+			theSign.setLine(3, plotOwner.substring(plotOwner.length() / 2));
+			// String plotOwnerFirst = plotOwner.substring(0, 12);
+			// String plotOwnerSecond = plotOwner.substring(12);
+			// theSign.setLine(2, plugin.ownerColor + plotOwnerFirst);
+			// theSign.setLine(3, plugin.ownerColor + plotOwnerSecond);
 		}
 		else
 		{

@@ -169,7 +169,12 @@ public class IClaimsMessages
 				getUserMessageYAML().set(jarKey, getJarMessageYAML().get(jarKey));
 			}
 		}
-
+		
+		if(!getUserMessageYAML().getString("version").equals(getJarMessageYAML().getString("version")))
+		{
+			getUserMessageYAML().set("version", getJarMessageYAML().getString("version"));
+		}
+		
 		try
 		{
 			getUserMessageYAML().save(new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "messages.yml"));
