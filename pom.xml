@@ -10,7 +10,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.build.number>2-SNAPSHOT</project.build.number>
+    <project.build.number>2</project.build.number>
   </properties>
   
   <repositories>
