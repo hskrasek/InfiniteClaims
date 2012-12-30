@@ -26,6 +26,7 @@ public class IClaimsMessages
 	public IClaimsMessages(InfiniteClaims plugin)
 	{
 		this.plugin = plugin;
+		messages = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "messages.yml"));
 
 		if (!new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "messages.yml").exists())
 		{
@@ -35,10 +36,10 @@ public class IClaimsMessages
 		{
 			updateUsersMessageFile();
 		}
-		else
-		{
-			messages = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "messages.yml"));
-		}
+//		else
+//		{
+//			messages = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "messages.yml"));
+//		}
 	}
 
 	public void reloadMessages()
