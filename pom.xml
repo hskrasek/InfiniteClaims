@@ -72,7 +72,11 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <file>target/classes/plugin.yml</file>
+                		<includes>
+                			<include>target/classes/plugin.yml</include>
+                			<include>target/classes/messages.yml</include>
+                		</includes>
+                    <!-- <file>target/classes/plugin.yml</file> -->
                     <replacements>
                         <replacement>
                             <token>maven-version-number</token>
