@@ -593,67 +593,49 @@ public class InfiniteClaimsUtilities
 			return;
 		}
 
-		// if (plugin.signsEnabled)
-		// {
-		// if (plugin.signPlacementMethod.equals("entrance"))
-		// {
-		// Location entranceLocation1 = new Location(claimsWorld,
-		// bottomRight.getX() + (plotSize / 2) - 2, plugin.plotHeight + 3,
-		// bottomRight.getZ() + (plotSize));
-		// Location entranceLocation2 = new Location(claimsWorld,
-		// bottomRight.getX() + (plotSize / 2) + 2, plugin.plotHeight + 3,
-		// bottomRight.getZ() + (plotSize));
-		// removeSign(entranceLocation1);
-		// removeSign(entranceLocation2);
-		// }
-		// else if (plugin.signPlacementMethod.equals("corners"))
-		// {
-		// Location bottomRightTest = new Location(claimsWorld,
-		// bottomRight.getX() - 1, bottomRight.getY() + 3, bottomRight.getZ() -
-		// 1);
-		// removeSign(bottomRightTest);
-		//
-		// Location bottomLeftTest = new Location(claimsWorld, bottomLeft.getX()
-		// + 1, bottomLeft.getY() + 3, bottomLeft.getZ() - 1);
-		// removeSign(bottomLeftTest);
-		//
-		// Location topRightSign = new Location(claimsWorld, topRight.getX() -
-		// 1, topRight.getY() + 3, topRight.getZ() + 1);
-		// removeSign(topRightSign);
-		//
-		// Location topLeftSign = new Location(claimsWorld, topLeft.getX() + 1,
-		// topLeft.getY() + 3, topLeft.getZ() + 1);
-		// removeSign(topLeftSign);
-		// }
-		// else if (plugin.signPlacementMethod.equals("both"))
-		// {
-		// Location entranceLocation1 = new Location(claimsWorld,
-		// bottomRight.getX() + (plotSize / 2) - 2, plugin.plotHeight + 3,
-		// bottomRight.getZ() + (plotSize));
-		// Location entranceLocation2 = new Location(claimsWorld,
-		// bottomRight.getX() + (plotSize / 2) + 2, plugin.plotHeight + 3,
-		// bottomRight.getZ() + (plotSize));
-		// removeSign(entranceLocation1);
-		// removeSign(entranceLocation2);
-		//
-		// Location bottomRightTest = new Location(claimsWorld,
-		// bottomRight.getX() - 1, bottomRight.getY() + 3, bottomRight.getZ() -
-		// 1);
-		// removeSign(bottomRightTest);
-		//
-		// Location bottomLeftTest = new Location(claimsWorld, bottomLeft.getX()
-		// + 1, bottomLeft.getY() + 3, bottomLeft.getZ() - 1);
-		// removeSign(bottomLeftTest);
-		//
-		// Location topRightSign = new Location(claimsWorld, topRight.getX() -
-		// 1, topRight.getY() + 3, topRight.getZ() + 1);
-		// removeSign(topRightSign);
-		//
-		// Location topLeftSign = new Location(claimsWorld, topLeft.getX() + 1,
-		// topLeft.getY() + 3, topLeft.getZ() + 1);
-		// removeSign(topLeftSign);
-		// }
-		// }
+		if (plugin.signsEnabled)
+		{
+			if (plugin.signPlacementMethod.equals("entrance"))
+			{
+				Location entranceLocation1 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) - 2, plugin.plotHeight + 3, bottomRight.getZ() + (plotSize));
+				Location entranceLocation2 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) + 2, plugin.plotHeight + 3, bottomRight.getZ() + (plotSize));
+				removeSign(entranceLocation1);
+				removeSign(entranceLocation2);
+			}
+			else if (plugin.signPlacementMethod.equals("corners"))
+			{
+				Location bottomRightTest = new Location(claimsWorld, bottomRight.getX() - 1, bottomRight.getY() + 3, bottomRight.getZ() - 1);
+				removeSign(bottomRightTest);
+
+				Location bottomLeftTest = new Location(claimsWorld, bottomLeft.getX() + 1, bottomLeft.getY() + 3, bottomLeft.getZ() - 1);
+				removeSign(bottomLeftTest);
+
+				Location topRightSign = new Location(claimsWorld, topRight.getX() - 1, topRight.getY() + 3, topRight.getZ() + 1);
+				removeSign(topRightSign);
+
+				Location topLeftSign = new Location(claimsWorld, topLeft.getX() + 1, topLeft.getY() + 3, topLeft.getZ() + 1);
+				removeSign(topLeftSign);
+			}
+			else if (plugin.signPlacementMethod.equals("both"))
+			{
+				Location entranceLocation1 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) - 2, plugin.plotHeight + 3, bottomRight.getZ() + (plotSize));
+				Location entranceLocation2 = new Location(claimsWorld, bottomRight.getX() + (plotSize / 2) + 2, plugin.plotHeight + 3, bottomRight.getZ() + (plotSize));
+				removeSign(entranceLocation1);
+				removeSign(entranceLocation2);
+
+				Location bottomRightTest = new Location(claimsWorld, bottomRight.getX() - 1, bottomRight.getY() + 3, bottomRight.getZ() - 1);
+				removeSign(bottomRightTest);
+
+				Location bottomLeftTest = new Location(claimsWorld, bottomLeft.getX() + 1, bottomLeft.getY() + 3, bottomLeft.getZ() - 1);
+				removeSign(bottomLeftTest);
+
+				Location topRightSign = new Location(claimsWorld, topRight.getX() - 1, topRight.getY() + 3, topRight.getZ() + 1);
+				removeSign(topRightSign);
+
+				Location topLeftSign = new Location(claimsWorld, topLeft.getX() + 1, topLeft.getY() + 3, topLeft.getZ() + 1);
+				removeSign(topLeftSign);
+			}
+		}
 
 		mgr.removeRegion(fullPlotName);
 
@@ -844,7 +826,12 @@ public class InfiniteClaimsUtilities
 	private void removeSign(Location blockLocation)
 	{
 		Block signBlock = blockLocation.getBlock();
-		signBlock.setType(Material.AIR);
+		Sign plotSign = (Sign)signBlock.getState();
+		for(int i = 0; i < 4; i++)
+		{
+			plotSign.setLine(i, "");
+		}
+		plotSign.update(true);
 	}
 
 	private void placeSign(String plotOwnerPrefix, String plotOwner, Block theBlock, BlockFace facingDirection)
