@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionDefault;
 
+import com.dumptruckman.minecraft.pluginbase.logging.Logging;
 import com.hskrasek.InfiniteClaims.InfiniteClaims;
 import com.hskrasek.InfiniteClaims.utils.InfiniteClaimsUtilities;
 import com.pneumaticraft.commandhandler.CommandHandler;
@@ -23,7 +24,7 @@ public class PlotAdminRemoveCommand extends IClaimsCommand
 		this.icUtils = plugin.getIcUtils();
 		this.setName("Plot Administration (Remove Plot)");
 		this.setCommandUsage(String.format("%s/iclaims admin %sremove {PLOTNAME} %s-p %s{PLAYER} %s-w %s{WORLD}", ChatColor.YELLOW, ChatColor.RED, ChatColor.YELLOW, ChatColor.RED, ChatColor.YELLOW, ChatColor.RED));
-		this.setArgRange(2, 3);
+		this.setArgRange(2, 5);
 		this.addKey("iclaims admin remove");
 		this.addKey("iclaimsadminremove");
 		this.addKey("icadminrem");
@@ -35,6 +36,7 @@ public class PlotAdminRemoveCommand extends IClaimsCommand
 
 	public void runCommand(CommandSender sender, List<String> args)
 	{
+		Logging.info("args.length = %d", args.size());
 		String plotName = args.get(0);
 		String playerName = CommandHandler.getFlag("-p", args);
 		String worldName = CommandHandler.getFlag("-w", args);
