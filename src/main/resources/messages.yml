@@ -1,7 +1,14 @@
-version: 2.1.0
+##################################################################################################
+#                    InfiniteClaims Messages File                                                #
+# To find out how to properly setup this file, please visit: http://bit.ly/12PwxdF               #
+# This message file supports any language and all supported colors in Minecraft, just as long    #
+# as the messages below that contain a %s, %d, etc. have one of those in the message. Link above #
+# explains more.                                                                                 #
+##################################################################################################
+version: maven-version-number
 messages:
     new-plot-claimed-pt1: "You don't seem to have a plot... Finding one now."
-    new-plot-claimed-pt2: "Found a plot for you, it's called '&e%s'."
+    new-plot-claimed-pt2: "Found a plot for you, it's called '&e%s'&f."
     new-plot-claimed-pt3: "Use '/icplot' to learn how to return to this plot."
     new-plot-claimed-pt1-multi: "Finding you another plot..."
     plots-left: "You can claim &e%d&f more plots in this world."
